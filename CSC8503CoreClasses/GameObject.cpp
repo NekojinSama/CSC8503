@@ -9,6 +9,7 @@ using namespace NCL::CSC8503;
 GameObject::GameObject(string objectName)	{
 	name			= objectName;
 	worldID			= -1;
+	layer			= -1;
 	isActive		= true;
 	boundingVolume	= nullptr;
 	physicsObject	= nullptr;

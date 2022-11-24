@@ -74,6 +74,14 @@ namespace NCL::CSC8503 {
 			return worldID;
 		}
 
+		void SetLayer(int l) {
+			layer = l;
+		}
+
+		int GetLayer() const {
+			return layer;
+		}
+
 	protected:
 		Transform			transform;
 
@@ -84,6 +92,7 @@ namespace NCL::CSC8503 {
 
 		bool		isActive;
 		int			worldID;
+		int			layer;
 		std::string	name;
 
 		Vector3 broadphaseAABB;
