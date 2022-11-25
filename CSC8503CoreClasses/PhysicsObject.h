@@ -65,6 +65,8 @@ namespace NCL {
 				return inverseInteriaTensor;
 			}
 
+			
+
 		protected:
 			const CollisionVolume* volume;
 			Transform*		transform;
@@ -76,12 +78,13 @@ namespace NCL {
 			//linear stuff
 			Vector3 linearVelocity;
 			Vector3 force;
+
 			
 			//angular stuff
 			Vector3 angularVelocity;
 			Vector3 torque;
 			Vector3 inverseInertia;
-			Matrix3 inverseInteriaTensor;
+			Matrix3 inverseInteriaTensor;			
 		};
 	}
 }

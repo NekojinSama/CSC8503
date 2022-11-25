@@ -82,6 +82,7 @@ namespace NCL::CSC8503 {
 			return layer;
 		}
 
+
 	protected:
 		Transform			transform;
 
@@ -94,7 +95,7 @@ namespace NCL::CSC8503 {
 		int			worldID;
 		int			layer;
 		std::string	name;
-
+		float		dampForce;
 		Vector3 broadphaseAABB;
 	};
 }

@@ -24,7 +24,7 @@ TutorialGame::TutorialGame()	{
 	physics		= new PhysicsSystem(*world);
 
 	forceMagnitude	= 10.0f;
-	useGravity		= false;
+	useGravity		= true;
 	inSelectionMode = false;
 
 	InitialiseAssets();
@@ -90,6 +90,7 @@ void TutorialGame::UpdateGame(float dt) {
 	UpdateKeys();
 
 	if (useGravity) {
+		
 		Debug::Print("(G)ravity on", Vector2(5, 95), Debug::RED);
 	}
 	else {
@@ -110,6 +111,7 @@ void TutorialGame::UpdateGame(float dt) {
 		if (world->Raycast(r, closestCollision, true, selectionObject)) {
 			if (objClosest) {
 				objClosest->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
+				Debug::DrawLine(rayPos, objClosest->GetTransform().GetPosition(), Vector4(1, 0, 0, 1), 10.0);
 			}
 			objClosest = (GameObject*)closestCollision.node;
 
@@ -520,6 +522,11 @@ line - after the third, they'll be able to twist under torque aswell.
 void TutorialGame::MoveSelectedObject() {
 	Debug::Print("Click Force:" + std::to_string(forceMagnitude), Vector2(5, 90));
 	forceMagnitude += Window::GetMouse()->GetWheelMovement() * 100.0f;
+
+	Debug::Print("Damp Force:" + std::to_string(linearDamping), Vector2(5, 80));
+	linearDamping += Window::GetKeyboard()->KeyPressed(NCL::KeyboardKeys::NUMPAD7) * 0.1f;
+	linearDamping -= Window::GetKeyboard()->KeyPressed(NCL::KeyboardKeys::NUMPAD4) * 0.1f;
+	physics->SetDampForce(linearDamping);
 
 	if (!selectionObject) {
 		return;//we haven't selected anything!
