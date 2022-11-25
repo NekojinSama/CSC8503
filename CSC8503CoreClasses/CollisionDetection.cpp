@@ -44,7 +44,7 @@ bool CollisionDetection::RayIntersection(const Ray& r,GameObject& object, RayCol
 
 		case VolumeType::Capsule:	hasCollided = RayCapsuleIntersection(r, worldTransform, (const CapsuleVolume&)*volume, collision); break;
 	}
-
+	
 	return hasCollided;
 }
 
