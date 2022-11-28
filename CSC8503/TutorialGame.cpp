@@ -324,7 +324,7 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 
 	cube->GetTransform()
 		.SetPosition(position)
-		.SetScale(dimensions * 2);
+		.SetScale(Vector3(dimensions.x * 2,dimensions.y * 4, dimensions.z * 2));
 
 	cube->SetLayer(1);
 
