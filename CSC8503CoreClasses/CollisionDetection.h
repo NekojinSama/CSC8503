@@ -32,7 +32,7 @@ namespace NCL {
 			ContactPoint point;
 
 			CollisionInfo() {
-
+				
 			}
 
 			void AddContactPoint(const Vector3& localA, const Vector3& localB, const Vector3& normal, float p) {
