@@ -278,6 +278,7 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
 
 	floor->GetPhysicsObject()->SetInverseMass(0);
+	floor->GetPhysicsObject()->SetElasticity(0.1f);
 	floor->GetPhysicsObject()->InitCubeInertia();
 
 	world->AddGameObject(floor);
@@ -308,6 +309,7 @@ GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius
 	sphere->SetPhysicsObject(new PhysicsObject(&sphere->GetTransform(), sphere->GetBoundingVolume()));
 
 	sphere->GetPhysicsObject()->SetInverseMass(inverseMass);
+	sphere->GetPhysicsObject()->SetElasticity(1.0f);
 	sphere->GetPhysicsObject()->InitSphereInertia();
 
 	world->AddGameObject(sphere);
@@ -331,6 +333,7 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
 
 	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
+	cube->GetPhysicsObject()->SetElasticity(0.4f);
 	cube->GetPhysicsObject()->InitCubeInertia();
 
 	world->AddGameObject(cube);
