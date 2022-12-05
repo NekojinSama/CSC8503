@@ -255,7 +255,7 @@ void TutorialGame::InitWorld() {
 
 	InitGameExamples();
 	InitDefaultFloor();
-	BridgeConstraintTest();
+	//BridgeConstraintTest();
 }
 
 /*
@@ -529,6 +529,7 @@ bool TutorialGame::SelectObject() {
 				}
 				else {
 					lockedObject = selectionObject;
+					world->GetMainCamera()->SetPosition(selectionObject->GetTransform().GetPosition() + Vector3(-10, 0, 0));
 				}
 			}
 		}
@@ -567,6 +568,27 @@ void TutorialGame::MoveSelectedObject() {
 			if (closestCollision.node == selectionObject) {
 				selectionObject->GetPhysicsObject()->AddForceAtPosition(ray.GetDirection() * forceMagnitude, closestCollision.collidedAt);
 			}
+		}
+	}
+
+	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::W)) {
+		if (selectionObject) {
+			selectionObject->GetTransform().SetPosition(selectionObject->GetTransform().GetPosition() + Vector3(0.4, 0, 0));
+		}
+	}
+	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::S)) {
+		if (selectionObject) {
+			selectionObject->GetTransform().SetPosition(selectionObject->GetTransform().GetPosition() + Vector3(-0.4, 0, 0));
+		}
+	}
+	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::A)) {
+		if (selectionObject) {
+			selectionObject->GetTransform().SetPosition(selectionObject->GetTransform().GetPosition() + Vector3(0, 0, -0.4));
+		}
+	}
+	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::D)) {
+		if (selectionObject) {
+			selectionObject->GetTransform().SetPosition(selectionObject->GetTransform().GetPosition() + Vector3(0, 0, 0.4));
 		}
 	}
 }

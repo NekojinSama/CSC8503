@@ -63,7 +63,7 @@ namespace NCL {
 			bool inSelectionMode;
 
 			float		forceMagnitude;
-			float		linearDamping;
+			float		linearDamping = 0.3f;
 
 			GameObject* selectionObject = nullptr;
 
