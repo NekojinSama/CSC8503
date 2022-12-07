@@ -87,6 +87,10 @@ void TutorialGame::UpdateGame(float dt) {
 		world->GetMainCamera()->SetYaw(angles.y);
 	}
 
+	if (testStateObject) {
+		testStateObject -> Update(dt);
+	}
+
 	UpdateKeys();
 
 	if (useGravity) {
@@ -120,6 +124,9 @@ void TutorialGame::UpdateGame(float dt) {
 	}
 
 	Debug::DrawLine(Vector3(), Vector3(0, 100, 0), Vector4(1, 0, 0, 1));
+	Debug::DrawLine(Vector3(50,0,0), Vector3(50, 100, 0), Vector4(1, 0, 0, 1));
+	//Debug::DrawLine(Vector3(), Vector3(0, 100, 0), Vector4(1, 0, 0, 1));
+	//Debug::DrawLine(Vector3(), Vector3(0, 100, 0), Vector4(1, 0, 0, 1));
 
 	SelectObject();
 	MoveSelectedObject();
@@ -251,11 +258,12 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-	InitMixedGridWorld(15, 15, 3.5f, 3.5f);
+	//InitMixedGridWorld(15, 15, 3.5f, 3.5f);
 
 	InitGameExamples();
 	InitDefaultFloor();
 	//BridgeConstraintTest();
+	testStateObject = AddStateObjectToWorld(Vector3(10, 10, 10), 1.0f, 1);
 }
 
 /*
@@ -349,6 +357,8 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	GameObject* character = new GameObject("Player");
 	SphereVolume* volume  = new SphereVolume(1.0f);
 
+	character->SetLayer(2);
+
 	character->SetBoundingVolume((CollisionVolume*)volume);
 
 	character->GetTransform()
@@ -371,6 +381,7 @@ GameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 	float inverseMass	= 0.5f;
 
 	GameObject* character = new GameObject("Enemy");
+	character->SetLayer(3);
 
 	AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
 	character->SetBoundingVolume((CollisionVolume*)volume);
@@ -410,6 +421,31 @@ GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 	return apple;
 }
 
+StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position, float radius, float inverseMass) {
+	StateGameObject* sphere = new StateGameObject();
+
+	Vector3 sphereSize = Vector3(radius, radius, radius);
+	SphereVolume* volume = new SphereVolume(radius);
+	sphere->SetBoundingVolume((CollisionVolume*)volume);
+
+	sphere->GetTransform()
+		.SetScale(sphereSize)
+		.SetPosition(position);
+
+	sphere->SetLayer(1);
+
+	sphere->SetRenderObject(new RenderObject(&sphere->GetTransform(), sphereMesh, basicTex, basicShader));
+	sphere->SetPhysicsObject(new PhysicsObject(&sphere->GetTransform(), sphere->GetBoundingVolume()));
+
+	sphere->GetPhysicsObject()->SetInverseMass(inverseMass);
+	sphere->GetPhysicsObject()->SetElasticity(1.0f);
+	sphere->GetPhysicsObject()->InitSphereInertia();
+
+	world->AddGameObject(sphere);
+
+	return sphere;
+}
+
 void TutorialGame::InitDefaultFloor() {
 	AddFloorToWorld(Vector3(0, -20, 0));
 }
@@ -417,7 +453,7 @@ void TutorialGame::InitDefaultFloor() {
 void TutorialGame::InitGameExamples() {
 	AddPlayerToWorld(Vector3(0, 5, 0));
 	AddEnemyToWorld(Vector3(5, 5, 0));
-	AddBonusToWorld(Vector3(10, 5, 0));
+	//AddBonusToWorld(Vector3(10, 5, 0));
 }
 
 void TutorialGame::InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius) {

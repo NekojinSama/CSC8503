@@ -38,11 +38,13 @@ void StateGameObject::Update(float dt) {
 }
 
 void StateGameObject::MoveLeft(float dt) {
-	GetPhysicsObject()->AddForce({ -100, 0, 0 });
+	GetPhysicsObject()->ClearForces();
+	GetPhysicsObject()->AddForce({ -10, 0, 0 });
 	counter += dt;
 }
 
 void StateGameObject::MoveRight(float dt) {
-	GetPhysicsObject()->AddForce({ 100, 0, 0 });
+	GetPhysicsObject()->ClearForces();
+	GetPhysicsObject()->AddForce({ 10, 0, 0 });
 	counter -= dt;
 }
