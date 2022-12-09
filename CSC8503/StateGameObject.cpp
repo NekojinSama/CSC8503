@@ -12,7 +12,7 @@ StateGameObject::StateGameObject() {
 	stateMachine = new StateMachine();
 
 	State* stateA = new State([&](float dt)->void {
-		this->MovePatrol(dt);
+		this->MoveLeft(dt);
 		});
 	State* stateB = new State([&](float dt)->void {
 		this->MoveRight(dt);
@@ -67,6 +67,6 @@ void StateGameObject::MovePatrol(float dt) {
 
 void StateGameObject::MoveRight(float dt) {
 	GetPhysicsObject()->ClearForces();
-	GetPhysicsObject()->AddForce({ -10, 0, 0 });
+	GetPhysicsObject()->AddForce({ 10, 0, 0 });
 	counter -= dt;
 }
