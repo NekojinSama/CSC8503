@@ -9,7 +9,6 @@
 #include "StateGameObject.h"
 
 
-
 using namespace NCL;
 using namespace CSC8503;
 
@@ -25,6 +24,7 @@ TutorialGame::TutorialGame()	{
 
 	forceMagnitude	= 10.0f;
 	useGravity		= true;
+	physics->UseGravity(useGravity);
 	inSelectionMode = false;
 
 	InitialiseAssets();
@@ -69,7 +69,10 @@ TutorialGame::~TutorialGame()	{
 
 void TutorialGame::UpdateGame(float dt) {
 	if (!inSelectionMode) {
-		world->GetMainCamera()->UpdateCamera(dt);
+		Debug::Print("Press M to change to camera POV!", Vector2(5, 15));
+		
+		if (POV) { PlayerCamera(dt); }
+		else{ world->GetMainCamera()->UpdateCamera(dt); }
 	}
 	if (lockedObject != nullptr) {
 		Vector3 objPos = lockedObject->GetTransform().GetPosition();
@@ -139,6 +142,11 @@ void TutorialGame::UpdateGame(float dt) {
 	Debug::UpdateRenderables(dt);
 }
 
+void TutorialGame::PlayerCamera(float dt) {
+//	world->GetMainCamera()->SetPosition(Vector3(-10, 0, 0));
+	world->GetMainCamera()->SetPosition(player->GetTransform().GetPosition() + Vector3(-10, 0, 0));
+}
+
 void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
 		InitWorld(); //We can reset the simulation at any time with F1
@@ -170,6 +178,9 @@ void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F8)) {
 		world->ShuffleObjects(false);
 	}
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::M)) {
+		TogglePOV();
+	}
 
 	if (lockedObject) {
 		LockedObjectMovement();
@@ -178,6 +189,12 @@ void TutorialGame::UpdateKeys() {
 		DebugObjectMovement();
 	}
 }
+
+void TutorialGame::TogglePOV() {
+	POV = !POV;
+}
+
+
 
 void TutorialGame::LockedObjectMovement() {
 	Matrix4 view		= world->GetMainCamera()->BuildViewMatrix();
@@ -354,26 +371,26 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	float meshSize		= 1.0f;
 	float inverseMass	= 0.5f;
 
-	GameObject* character = new GameObject("Player");
+	player = new GameObject("Player");
 	SphereVolume* volume  = new SphereVolume(1.0f);
 
-	character->SetLayer(2);
+	player->SetLayer(2);
 
-	character->SetBoundingVolume((CollisionVolume*)volume);
+	player->SetBoundingVolume((CollisionVolume*)volume);
 
-	character->GetTransform()
+	player->GetTransform()
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(position);
 
-	character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, basicShader));
-	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
+	player->SetRenderObject(new RenderObject(&player->GetTransform(), charMesh, nullptr, basicShader));
+	player->SetPhysicsObject(new PhysicsObject(&player->GetTransform(), player->GetBoundingVolume()));
 
-	character->GetPhysicsObject()->SetInverseMass(inverseMass);
-	character->GetPhysicsObject()->InitSphereInertia();
+	player->GetPhysicsObject()->SetInverseMass(inverseMass);
+	player->GetPhysicsObject()->InitSphereInertia();
 
-	world->AddGameObject(character);
+	world->AddGameObject(player);
 
-	return character;
+	return player;
 }
 
 GameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
@@ -451,8 +468,8 @@ void TutorialGame::InitDefaultFloor() {
 }
 
 void TutorialGame::InitGameExamples() {
-	AddPlayerToWorld(Vector3(0, 5, 0));
-	AddEnemyToWorld(Vector3(5, 5, 0));
+	AddPlayerToWorld(playerPos);
+	AddEnemyToWorld(Vector3(5, -5, 0));
 	//AddBonusToWorld(Vector3(10, 5, 0));
 }
 
@@ -627,6 +644,7 @@ void TutorialGame::MoveSelectedObject() {
 			selectionObject->GetTransform().SetPosition(selectionObject->GetTransform().GetPosition() + Vector3(0, 0, 0.4));
 		}
 	}
-}
 
+
+}
 

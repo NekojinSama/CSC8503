@@ -15,6 +15,9 @@ namespace NCL {
 			~TutorialGame();
 
 			virtual void UpdateGame(float dt);
+			Vector3 GetPlayerPosition() {
+				return playerPos;
+			}
 
 		protected:
 			void InitialiseAssets();
@@ -37,6 +40,8 @@ namespace NCL {
 
 			void InitDefaultFloor();
 			void BridgeConstraintTest();
+			void PlayerCamera(float dt);
+			void TogglePOV();
 
 			bool SelectObject();
 			void MoveSelectedObject();
@@ -69,6 +74,8 @@ namespace NCL {
 			float		forceMagnitude;
 			float		linearDamping = 0.3f;
 
+			Vector3 playerPos = (Vector3(0, 5, 0));
+
 			GameObject* selectionObject = nullptr;
 
 			MeshGeometry*	capsuleMesh = nullptr;
@@ -85,12 +92,14 @@ namespace NCL {
 
 			//Coursework Additional functionality	
 			GameObject* lockedObject	= nullptr;
+			GameObject* player			= nullptr;
 			Vector3 lockedOffset		= Vector3(0, 14, 20);
 			void LockCameraToObject(GameObject* o) {
 				lockedObject = o;
 			}
 
 			GameObject* objClosest = nullptr;
+			bool POV = false;
 		};
 	}
 }
