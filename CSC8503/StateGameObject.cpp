@@ -12,7 +12,7 @@ StateGameObject::StateGameObject() {
 	stateMachine = new StateMachine();
 
 	State* stateA = new State([&](float dt)->void {
-		this->MoveLeft(dt);
+		this->MovePatrol(dt);
 		});
 	State* stateB = new State([&](float dt)->void {
 		this->MoveRight(dt);
@@ -43,8 +43,30 @@ void StateGameObject::MoveLeft(float dt) {
 	counter += dt;
 }
 
+//void StateGameObject::PatrolList() {
+//	posList.push_back(Vector3(50, 10, 0));
+//	posList.push_back(Vector3(50, 10, 50));
+//	posList.push_back(Vector3(0, 10, 50));
+//	posList.push_back(Vector3(0, 10, 0));
+//}
+
+void StateGameObject::MovePatrol(float dt) {
+	GetPhysicsObject()->ClearForces();
+	GetPhysicsObject()->AddForce((posList.at(0) / posList.at(0)));
+	GetPhysicsObject()->ClearForces();
+	//for (int i = 0; i < posList.size(); ++i) {
+	//	while (GetTransform().GetPosition() != posList.at(i)) {
+	//		GetPhysicsObject()->AddForce((posList.at(i)/ posList.at(i)));
+	//		//std::cout << GetTransform().GetPosition() << std::endl;
+	//	}
+	//	if (i = posList.size() - 1) { i = 0; }
+	//}
+	//std::cout<<GetTransform().GetPosition()<<std::endl;
+	counter += dt;
+}
+
 void StateGameObject::MoveRight(float dt) {
 	GetPhysicsObject()->ClearForces();
-	GetPhysicsObject()->AddForce({ 10, 0, 0 });
+	GetPhysicsObject()->AddForce({ -10, 0, 0 });
 	counter -= dt;
 }

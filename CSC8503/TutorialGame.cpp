@@ -263,7 +263,7 @@ void TutorialGame::InitWorld() {
 	InitGameExamples();
 	InitDefaultFloor();
 	//BridgeConstraintTest();
-	testStateObject = AddStateObjectToWorld(Vector3(10, 10, 10), 1.0f, 1);
+	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0), 1.0f, 1);
 }
 
 /*
