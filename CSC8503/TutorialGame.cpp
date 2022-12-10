@@ -8,6 +8,7 @@
 #include "OrientationConstraint.h"
 #include "StateGameObject.h"
 
+//#include <math.h>
 
 using namespace NCL;
 using namespace CSC8503;
@@ -142,9 +143,62 @@ void TutorialGame::UpdateGame(float dt) {
 	Debug::UpdateRenderables(dt);
 }
 
+Vector3 TutorialGame::PlayerMovementPace(float dt, Vector3 dir) {
+	float maxSpeed = 10.0f;
+	float maxAcceleration = 10.0f;
+
+	Vector3 velocity = dir * maxSpeed;
+	Vector3 dVelocity = dir * maxSpeed;
+
+	float maxSpeedChange = maxAcceleration * dt;
+	if (velocity.x < dVelocity.x) {
+		velocity.x = min(velocity.x + maxSpeedChange, dVelocity.x);
+	}
+	else if (velocity.x > dVelocity.x) {
+		velocity.x = max(velocity.x - maxSpeedChange, dVelocity.x);
+	}
+	if (velocity.z < dVelocity.z) {
+		velocity.z = min(velocity.z + maxSpeedChange, dVelocity.z);
+	}
+	else if (velocity.z > dVelocity.z) {
+		velocity.z = max(velocity.z - maxSpeedChange, dVelocity.z);
+	}
+	Vector3 displacement = velocity * dt;
+	return displacement;
+}
+
+void TutorialGame::PlayerMovement(float dt) {
+	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::W)) {
+		Vector3 newPos = player->GetTransform().GetPosition() + TutorialGame::PlayerMovementPace(dt, Vector3(0,0,-1));
+		player->GetTransform().SetPosition(newPos);
+	}
+	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::S)) {
+		Vector3 newPos = player->GetTransform().GetPosition() + TutorialGame::PlayerMovementPace(dt, Vector3(0, 0, 1));
+		player->GetTransform().SetPosition(newPos);
+	}
+	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::A)) {
+		Vector3 newPos = player->GetTransform().GetPosition() + TutorialGame::PlayerMovementPace(dt, Vector3(-1, 0, 0));
+		player->GetTransform().SetPosition(newPos);
+	}
+	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::D)) {
+		Vector3 newPos = player->GetTransform().GetPosition() + TutorialGame::PlayerMovementPace(dt, Vector3(1, 0, 0));
+		player->GetTransform().SetPosition(newPos);
+	}
+}
+
 void TutorialGame::PlayerCamera(float dt) {
-//	world->GetMainCamera()->SetPosition(Vector3(-10, 0, 0));
-	world->GetMainCamera()->SetPosition(player->GetTransform().GetPosition() + Vector3(-10, 0, 0));
+	TutorialGame::PlayerMovement(dt);
+
+	Vector3 camPos = player->GetTransform().GetPosition() + Vector3(0,0,10);
+	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, player->GetTransform().GetPosition(), Vector3(0, 1, 0));
+	Matrix4 modelMat = temp.Inverse();
+
+	Quaternion q(modelMat);
+	Vector3 angles = q.ToEuler();
+
+	world->GetMainCamera()->SetPosition(camPos);
+	world->GetMainCamera()->SetPitch(angles.x);
+	world->GetMainCamera()->SetYaw(angles.z);
 }
 
 void TutorialGame::UpdateKeys() {

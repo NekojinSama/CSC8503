@@ -41,6 +41,8 @@ namespace NCL {
 			void InitDefaultFloor();
 			void BridgeConstraintTest();
 			void PlayerCamera(float dt);
+			void PlayerMovement(float dt);
+			Vector3 PlayerMovementPace(float dt, Vector3 dir);
 			void TogglePOV();
 
 			bool SelectObject();
