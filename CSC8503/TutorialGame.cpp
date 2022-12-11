@@ -184,20 +184,35 @@ void TutorialGame::PlayerMovement(float dt) {
 		Vector3 newPos = player->GetTransform().GetPosition() + TutorialGame::PlayerMovementPace(dt, Vector3(1, 0, 0));
 		player->GetTransform().SetPosition(newPos);
 	}
+
+	Vector3 angles = player->GetTransform().GetOrientation().ToEuler();
+	/*pitch -= (Window::GetMouse()->GetRelativePosition().y);
+	yaw -= (Window::GetMouse()->GetRelativePosition().x);*/
+	if ((Window::GetMouse()->GetRelativePosition().y)) {
+		angles.y -= (Window::GetMouse()->GetRelativePosition().y);
+	}
+	/*if ((Window::GetMouse()->GetRelativePosition().x)) {
+		angles.x -= (Window::GetMouse()->GetRelativePosition().x);
+	}*/
+
+	player->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(angles.x, angles.y, angles.z));
 }
 
 void TutorialGame::PlayerCamera(float dt) {
 	TutorialGame::PlayerMovement(dt);
 
 	Vector3 camPos = player->GetTransform().GetPosition() + Vector3(0,0,10);
-	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, player->GetTransform().GetPosition(), Vector3(0, 1, 0));
+	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, player->GetTransform().GetPosition(), Vector3(0, 0, 1));
 	Matrix4 modelMat = temp.Inverse();
 
 	Quaternion q(modelMat);
 	Vector3 angles = q.ToEuler();
 
+	float camerax = camPos.x * sin((player->GetTransform().GetOrientation().y)* angles.x / 180) + player->GetTransform().GetPosition().x;
+	//float cameraz = cameradist * cos((yrot)*M_PI / 180) + zpos;
+
 	world->GetMainCamera()->SetPosition(camPos);
-	world->GetMainCamera()->SetPitch(angles.x);
+	world->GetMainCamera()->SetPitch(camerax);
 	world->GetMainCamera()->SetYaw(angles.z);
 }
 
