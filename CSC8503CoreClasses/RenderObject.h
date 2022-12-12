@@ -40,6 +40,7 @@ namespace NCL {
 				colour = c;
 			}
 
+
 			Vector4 GetColour() const {
 				return colour;
 			}

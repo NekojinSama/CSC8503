@@ -56,6 +56,12 @@ namespace NCL::Maths {
 			return sqrt((x*x) + (y*y) + (z*z));
 		}
 
+		static Vector3 Lerp(Vector3 a, Vector3 b, float t) {
+			Vector3 val = a * (1 - t) + (b * t);
+			return val;
+		}
+
+
 		constexpr float	LengthSquared() const {
 			return ((x*x) + (y*y) + (z*z));
 		}

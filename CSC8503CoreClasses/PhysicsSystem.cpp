@@ -158,6 +158,9 @@ void PhysicsSystem::UpdateCollisionList() {
 		if ((*i).framesLeft == numCollisionFrames) {
 			i->a->OnCollisionBegin(i->b);
 			i->b->OnCollisionBegin(i->a);
+			if (i->a->IsActive() || i->b->IsActive()) {
+				i = allCollisions.erase(i); continue;
+			}
 		}
 
 		CollisionDetection::CollisionInfo& in = const_cast<CollisionDetection::CollisionInfo&>(*i);

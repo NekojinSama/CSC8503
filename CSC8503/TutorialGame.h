@@ -4,6 +4,7 @@
 #include "GameTechVulkanRenderer.h"
 #endif
 #include "PhysicsSystem.h"
+#include "BonusInteract.h"
 
 #include "StateGameObject.h"
 
@@ -18,6 +19,8 @@ namespace NCL {
 			Vector3 GetPlayerPosition() {
 				return playerPos;
 			}
+
+			GameObject* GetPlayer() { return player; }
 
 		protected:
 			void InitialiseAssets();
@@ -57,6 +60,7 @@ namespace NCL {
 			GameObject* AddPlayerToWorld(const Vector3& position);
 			GameObject* AddEnemyToWorld(const Vector3& position);
 			GameObject* AddBonusToWorld(const Vector3& position);
+			BonusInteract* AddAppleToWorld(const Vector3& position);
 
 			StateGameObject* AddStateObjectToWorld(const Vector3& position, float radius, float inverseMass);
 			StateGameObject* testStateObject;
@@ -79,6 +83,7 @@ namespace NCL {
 			Vector3 playerPos = (Vector3(0, 5, 0));
 
 			GameObject* selectionObject = nullptr;
+			GameObject* Object = nullptr;
 
 			MeshGeometry*	capsuleMesh = nullptr;
 			MeshGeometry*	cubeMesh	= nullptr;
@@ -95,6 +100,9 @@ namespace NCL {
 			//Coursework Additional functionality	
 			GameObject* lockedObject	= nullptr;
 			GameObject* player			= nullptr;
+			GameObject* apple			= nullptr;
+			BonusInteract* bonusApple	= nullptr;
+
 			Vector3 lockedOffset		= Vector3(0, 14, 20);
 			void LockCameraToObject(GameObject* o) {
 				lockedObject = o;
@@ -102,6 +110,9 @@ namespace NCL {
 
 			GameObject* objClosest = nullptr;
 			bool POV = false;
+			bool onGround = false;
+			float pitch;
+			float yaw;
 		};
 	}
 }
