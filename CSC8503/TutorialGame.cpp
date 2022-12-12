@@ -200,20 +200,28 @@ void TutorialGame::PlayerMovement(float dt) {
 
 void TutorialGame::PlayerCamera(float dt) {
 	TutorialGame::PlayerMovement(dt);
-
-	Vector3 camPos = player->GetTransform().GetPosition() + Vector3(0,0,10);
-	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, player->GetTransform().GetPosition(), Vector3(0, 0, 1));
+	Vector3 radius = Vector3(0,0,10);
+	Vector3 camPos = player->GetTransform().GetPosition() + radius;
+	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, player->GetTransform().GetPosition(), Vector3(0, 10, 0));
 	Matrix4 modelMat = temp.Inverse();
 
 	Quaternion q(modelMat);
 	Vector3 angles = q.ToEuler();
+	float yaw = player->GetTransform().GetOrientation().y;
+	float pitch = world->GetMainCamera()->GetPitch();
 
-	float camerax = camPos.x * sin((player->GetTransform().GetOrientation().y)* angles.x / 180) + player->GetTransform().GetPosition().x;
+	float x = player->GetTransform().GetPosition().x + radius.z * sin(yaw * 3.14f / 180);
+	float z = player->GetTransform().GetPosition().z + radius.z * cos(yaw * 3.14f / 180);
+	float y = player->GetTransform().GetPosition().y;
+
+	float camerax = /*(camPos.x - player->GetTransform().GetPosition().x)*/ radius.z * sin(yaw * 3.14f / 180) + player->GetTransform().GetPosition().x;
+	float cameray = -radius.z * cos((pitch + 270.0f) * 3.14f / 180) + player->GetTransform().GetPosition().y;
+	float cameraz = /*(camPos.z - player->GetTransform().GetPosition().z)*/ radius.z * cos(yaw * 3.14f / 180) + player->GetTransform().GetPosition().z;
 	//float cameraz = cameradist * cos((yrot)*M_PI / 180) + zpos;
 
-	world->GetMainCamera()->SetPosition(camPos);
-	world->GetMainCamera()->SetPitch(camerax);
-	world->GetMainCamera()->SetYaw(angles.z);
+	world->GetMainCamera()->SetPosition(Vector3(camerax,cameray,cameraz));
+	world->GetMainCamera()->SetPitch(y);
+	world->GetMainCamera()->SetYaw((-z/x));
 }
 
 void TutorialGame::UpdateKeys() {
