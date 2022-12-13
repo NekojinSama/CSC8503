@@ -10,6 +10,7 @@ using namespace CSC8503;
 StateGameObject::StateGameObject() {
 	counter = 0.0f;
 	stateMachine = new StateMachine();
+	GameObject* playerInfo = TutorialGame::player;
 
 	State* stateA = new State([&](float dt)->void {
 		this->MoveLeft(dt);
@@ -69,4 +70,16 @@ void StateGameObject::MoveRight(float dt) {
 	GetPhysicsObject()->ClearForces();
 	GetPhysicsObject()->AddForce({ 10, 0, 0 });
 	counter -= dt;
+}
+
+void StateGameObject::ChasePlayer(Vector3 player) {
+	float distance = player.Length() - this->GetTransform().GetPosition().Length();
+	if (distance > 20) {
+		//rest state
+	}
+	else if (distance < 20) {
+		//follow player
+		/*this->GetPhysicsObject()->AddForce(TutorialGame::PlayerMovementPace(dt, 
+		player->GetTransform().GetOrientation() * Vector3(0, 0, -1)) * 20);*/
+	}
 }

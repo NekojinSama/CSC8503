@@ -566,7 +566,7 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position, fl
 		.SetScale(sphereSize)
 		.SetPosition(position);
 
-	sphere->SetLayer(1);
+	sphere->SetLayer(5);
 
 	sphere->SetRenderObject(new RenderObject(&sphere->GetTransform(), sphereMesh, basicTex, basicShader));
 	sphere->SetPhysicsObject(new PhysicsObject(&sphere->GetTransform(), sphere->GetBoundingVolume()));

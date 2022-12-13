@@ -1,11 +1,12 @@
 #pragma once
 #include "GameObject.h"
+#include "TutorialGame.h"
 #include <vector>
 
 namespace NCL {
     namespace CSC8503 {
         class StateMachine;
-        class StateGameObject : public GameObject  {
+        class StateGameObject : public GameObject , public TutorialGame {
         public:
             StateGameObject();
             ~StateGameObject();
@@ -17,7 +18,7 @@ namespace NCL {
             void MoveLeft(float dt);
             void MoveRight(float dt);
             void MovePatrol(float dt);
-            void PatrolList();
+            void ChasePlayer(Vector3 player);
 
             vector <Vector3> posList = { Vector3(50, 10, 0), Vector3(50, 10, 50), Vector3(0, 10, 50), Vector3(0, 10, 0) };
 
