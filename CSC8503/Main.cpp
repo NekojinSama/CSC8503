@@ -69,7 +69,7 @@ void TestPathfinding() {
 	Vector3 startPos(80, 0, 10);
 	Vector3 endPos(80, 0, 80);
 
-	/*if (TutorialGame().GetPlayerPosition() != NULL) {
+	/*if (TutorialGame().GetPlayerPosition().x != 0) {
 		endPos = TutorialGame().GetPlayerPosition();
 	}*/
 
@@ -88,6 +88,114 @@ void DisplayPathfinding() {
 
 		Debug::DrawLine(a, b, Vector4(0, 1, 0, 1));
 	}
+}
+
+void TestBehaviourTree() {
+	float behaviourTimer;
+	float distanceToTarget;
+	BehaviourAction* findKey = new BehaviourAction("Find Key", [&](float dt, BehaviourState state)->BehaviourState {
+		if (state == Initialise) {
+			std::cout << "Looking for a key\n";
+			behaviourTimer = rand() % 100;
+			state = Ongoing;
+		}
+		else if (state == Ongoing) {
+			behaviourTimer -= dt;
+			if (behaviourTimer <= 0.0f) {
+				std::cout << "Found a key!\n";
+				return Success;
+			}
+		}
+		return state;
+		});
+
+	BehaviourAction* goToRoom = new BehaviourAction("Go To Room", [&](float dt, BehaviourState state)->BehaviourState {
+		if (state == Initialise) {
+			std::cout << "Going to loot room\n";
+			state = Ongoing;
+		}
+		else if (state == Ongoing) {
+			distanceToTarget -= dt;
+			if (distanceToTarget <= 0.0f) {
+				std::cout << "Reached room!\n";
+				return Success;
+			}
+		}
+	return state;
+		});
+
+	BehaviourAction* openDoor = new BehaviourAction("Open Door", [&](float dt, BehaviourState state)->BehaviourState {
+		if (state == Initialise) {
+			std::cout << "Opening Door\n";
+			return Success;
+		}
+	return state;
+		});
+
+	BehaviourAction* lookForTreasure = new BehaviourAction("Look For Treasure", [&](float dt, BehaviourState state)->BehaviourState {
+		if (state == Initialise) {
+			std::cout << "Looking for treasure\n";
+			return Ongoing;
+		}
+		else if (state == Ongoing) {
+			bool found = rand() % 2;
+			if (found) {
+				std::cout << "I found some treasure!\n";
+				return Success;
+			}
+			std::cout << "No treasure in here..\n";
+			return Failure;
+		}
+	return state;
+		});
+
+	BehaviourAction* lookForItems = new BehaviourAction("Look For Items", [&](float dt, BehaviourState state)->BehaviourState {
+		if (state == Initialise) {
+			std::cout << "Looking for items\n";
+			return Ongoing;
+		}
+		else if (state == Ongoing) {
+			bool found = rand() % 2;
+			if (found) {
+				std::cout << "I found some items!\n";
+				return Success;
+			}
+			std::cout << "No treasure in here..\n";
+			return Failure;
+		}
+	return state;
+		});
+
+	BehaviourSequence* sequence = new BehaviourSequence("Room Sequence");
+	sequence->AddChild(findKey);
+	sequence->AddChild(goToRoom);
+	sequence->AddChild(openDoor);
+
+	BehaviourSelector* selection = new BehaviourSelector("Loot Selector");
+	selection->AddChild(lookForTreasure);
+	selection->AddChild(lookForItems);
+	
+	BehaviourSequence* rootSequence = new BehaviourSequence("Root Sequence");
+	rootSequence->AddChild(sequence);
+	rootSequence->AddChild(selection);
+
+	for (int i = 0; i < 5; i++) {
+		rootSequence->Reset();
+		behaviourTimer = 0.0f;
+		distanceToTarget = rand() % 250;
+		BehaviourState state = Ongoing;
+		std::cout << "We're going on an Adventure!\n";
+		while (state == Ongoing) {
+			state = rootSequence->Execute(1.0f);
+		}
+		if (state == Success) {
+			std::cout << "Sucessful Adventure!\n";
+		}
+		else if (state == Failure) {
+			std::cout << "Unsucessful Adventure!\n";
+		}
+	}
+	std::cout << "All done!\n";
 }
 
 /*
@@ -114,6 +222,8 @@ int main() {
 	
 	TutorialGame* g = new TutorialGame();
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
+	TestPathfinding();
+
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE)) {
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
 		if (dt > 0.1f) {
@@ -132,7 +242,8 @@ int main() {
 		}
 
 		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
-		TestPathfinding();
+		TestBehaviourTree();
+		//TestPathfinding();
 		DisplayPathfinding();
 		g->UpdateGame(dt);
 	}
