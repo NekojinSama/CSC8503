@@ -383,7 +383,7 @@ void TutorialGame::InitWorld() {
 	InitGameExamples();
 	InitDefaultFloor();
 	//BridgeConstraintTest();
-	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0), 1.0f, 1);
+	testStateObject = AddStateObjectToWorld(Vector3(0, 0, -10), 1.0f, 1);
 }
 
 /*
@@ -592,9 +592,9 @@ void TutorialGame::InitGameExamples() {
 	AddPlayerToWorld(playerPos);
 	AddEnemyToWorld(Vector3(5, -5, 0));
 	//AddBonusToWorld(Vector3(10, 5, 20));
-	//AddAppleToWorld(Vector3(10, 5, 40));
+	AddAppleToWorld(Vector3(10, 5, 40));
 	InitMazeGrid("TestGrid1.txt");
-	AddAppleToWorld(Vector3(80, 0, 70));
+	AddAppleToWorld(Vector3(70, 0, 80));
 }
 
 void TutorialGame::InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius) {

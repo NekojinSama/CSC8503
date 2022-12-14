@@ -11,10 +11,10 @@ using namespace CSC8503;
 StateGameObject::StateGameObject() {
 	counter = 0.0f;
 	stateMachine = new StateMachine();
-	//GameObject* playerInfo = TutorialGame::GetPlayer();
+	GameObject* playerInfo = TutorialGame::GetPlayer();
 
 	State* stateA = new State([&](float dt)->void {
-		this->MoveLeft(dt);
+		this->MovePatrol(dt);
 		});
 	State* stateB = new State([&](float dt)->void {
 		this->MoveRight(dt);
@@ -24,7 +24,7 @@ StateGameObject::StateGameObject() {
 	stateMachine->AddState(stateB);
 
 	stateMachine->AddTransition(new StateTransition(stateA, stateB, [&]()->bool {
-		return this->counter > 3.0f;
+		return false;
 		}));
 	stateMachine->AddTransition(new StateTransition(stateB, stateA, [&]()->bool {
 		return this->counter < 0.0f;
@@ -54,8 +54,6 @@ void StateGameObject::MoveLeft(float dt) {
 
 void StateGameObject::MovePatrol(float dt) {
 	GetPhysicsObject()->ClearForces();
-	GetPhysicsObject()->AddForce((posList.at(0) / posList.at(0)));
-	GetPhysicsObject()->ClearForces();
 	//for (int i = 0; i < posList.size(); ++i) {
 	//	while (GetTransform().GetPosition() != posList.at(i)) {
 	//		GetPhysicsObject()->AddForce((posList.at(i)/ posList.at(i)));
@@ -64,7 +62,15 @@ void StateGameObject::MovePatrol(float dt) {
 	//	if (i = posList.size() - 1) { i = 0; }
 	//}
 	//std::cout<<GetTransform().GetPosition()<<std::endl;
-	counter += dt;
+
+
+	int i = 0;
+	Vector3 moveDir = posList.at(instance) - this->GetTransform().GetPosition();
+	this->GetPhysicsObject()->AddForce(Vector3(moveDir.Normalised().x * 10 , 0, moveDir.Normalised().z * 10));
+	if ((moveDir*Vector3(1,0,1)).Length() < 10.0f) {
+		(instance == 3 ? instance = 0 : instance++);
+	}
+	//counter += dt;
 }
 
 void StateGameObject::MoveRight(float dt) {
