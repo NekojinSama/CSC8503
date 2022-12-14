@@ -4,6 +4,7 @@
 #include "State.h"
 #include "PhysicsObject.h"
 #include "TutorialGame.h"
+#include "NavigationGrid.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -11,7 +12,7 @@ using namespace CSC8503;
 StateGameObject::StateGameObject() {
 	counter = 0.0f;
 	stateMachine = new StateMachine();
-	GameObject* playerInfo = TutorialGame::GetPlayer();
+	GameObject* playerInfo = GetGameObject();
 
 	State* stateA = new State([&](float dt)->void {
 		this->MovePatrol(dt);
@@ -54,16 +55,6 @@ void StateGameObject::MoveLeft(float dt) {
 
 void StateGameObject::MovePatrol(float dt) {
 	GetPhysicsObject()->ClearForces();
-	//for (int i = 0; i < posList.size(); ++i) {
-	//	while (GetTransform().GetPosition() != posList.at(i)) {
-	//		GetPhysicsObject()->AddForce((posList.at(i)/ posList.at(i)));
-	//		//std::cout << GetTransform().GetPosition() << std::endl;
-	//	}
-	//	if (i = posList.size() - 1) { i = 0; }
-	//}
-	//std::cout<<GetTransform().GetPosition()<<std::endl;
-
-
 	int i = 0;
 	Vector3 moveDir = posList.at(instance) - this->GetTransform().GetPosition();
 	this->GetPhysicsObject()->AddForce(Vector3(moveDir.Normalised().x * 10 , 0, moveDir.Normalised().z * 10));
@@ -79,8 +70,8 @@ void StateGameObject::MoveRight(float dt) {
 	counter -= dt;
 }
 
-void StateGameObject::ChasePlayer(Vector3 player) {
-	float distance = player.Length() - this->GetTransform().GetPosition().Length();
+void StateGameObject::ChasePlayer(GameObject* player) {
+	float distance = player->GetTransform().GetPosition().Length() - this->GetTransform().GetPosition().Length();
 	if (distance > 20) {
 		//rest state
 	}
@@ -90,3 +81,32 @@ void StateGameObject::ChasePlayer(Vector3 player) {
 		player->GetTransform().GetOrientation() * Vector3(0, 0, -1)) * 20);*/
 	}
 }
+
+//std::vector<Vector3> testNodes;
+//void TestPathfinding() {
+//	NavigationGrid grid("TestGrid1.txt");
+//	NavigationPath outPath;
+//
+//	Vector3 startPos(80, 0, 10);
+//	Vector3 endPos(80, 0, 80);
+//
+//	/*if (TutorialGame().GetPlayerPosition().x != 0) {
+//		endPos = TutorialGame().GetPlayerPosition();
+//	}*/
+//
+//	bool found = grid.FindPath(startPos, endPos, outPath);
+//
+//	Vector3 pos;
+//	while (outPath.PopWaypoint(pos)) {
+//		testNodes.push_back(pos);
+//	}
+//}
+//
+//void DisplayPathfinding() {
+//	for (int i = 1; i < testNodes.size(); ++i) {
+//		Vector3 a = testNodes[i - 1];
+//		Vector3 b = testNodes[i];
+//
+//		Debug::DrawLine(a, b, Vector4(0, 1, 0, 1));
+//	}
+//}

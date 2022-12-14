@@ -21,6 +21,13 @@ void BonusInteract::OnCollisionBegin(GameObject* otherObject)
 {
 	if (otherObject == tutoGame->GetPlayer())
 	{
-		this->isActive = false;
+		this->SetHealth(this->GetHealth() - 1);
+		if (this->GetHealth() == 0)
+		{
+			this->isActive = false;
+		}
+		else {
+			this->GetRenderObject()->SetColour(Debug::RED);
+		}
 	}
 }

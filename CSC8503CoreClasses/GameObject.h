@@ -82,6 +82,14 @@ namespace NCL::CSC8503 {
 			return layer;
 		}
 
+		void SetHealth(int h) {
+			hp = h;
+		}
+
+		int GetHealth() const {
+			return hp;
+		}
+
 
 	protected:
 		Transform			transform;
@@ -94,6 +102,7 @@ namespace NCL::CSC8503 {
 		bool		isActive;
 		int			worldID;
 		int			layer;
+		int			hp;
 		std::string	name;
 		float		dampForce;
 		Vector3 broadphaseAABB;

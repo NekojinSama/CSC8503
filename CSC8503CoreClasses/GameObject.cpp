@@ -15,6 +15,7 @@ GameObject::GameObject(string objectName)	{
 	physicsObject	= nullptr;
 	renderObject	= nullptr;
 	networkObject	= nullptr;
+	hp				= 10;
 }
 
 GameObject::~GameObject()	{

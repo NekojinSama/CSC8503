@@ -41,6 +41,7 @@ for this module, even in the coursework, but you can add it if you like!
 */
 void TutorialGame::InitialiseAssets() {
 	cubeMesh	= renderer->LoadMesh("cube.msh");
+	coneMesh	= renderer->LoadMesh("cone.msh");
 	sphereMesh	= renderer->LoadMesh("sphere.msh");
 	charMesh	= renderer->LoadMesh("goat.msh");
 	enemyMesh	= renderer->LoadMesh("Keeper.msh");
@@ -519,16 +520,99 @@ GameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 	return character;
 }
 
-BonusInteract* TutorialGame::AddAppleToWorld(const Vector3& position) {
+BonusInteract* TutorialGame::AddBonusCircle(const Vector3& position) {
 	bonusApple = new BonusInteract(world, this);
 	bonusApple->SetLayer(6);
-	SphereVolume* volume = new SphereVolume(0.5f);
+	SphereVolume* volume = new SphereVolume(2.0f);
 	bonusApple->SetBoundingVolume((CollisionVolume*)volume);
 	bonusApple->GetTransform()
 		.SetScale(Vector3(2, 2, 2))
 		.SetPosition(position);
 
+	bonusApple->SetRenderObject(new RenderObject(&bonusApple->GetTransform(), sphereMesh, basicTex, basicShader));
+	bonusApple->SetPhysicsObject(new PhysicsObject(&bonusApple->GetTransform(), bonusApple->GetBoundingVolume()));
+
+	bonusApple->GetPhysicsObject()->SetInverseMass(1.0f);
+	bonusApple->GetPhysicsObject()->InitSphereInertia();
+	bonusApple->SetHealth(100);
+
+	world->AddGameObject(bonusApple);
+
+	return bonusApple;
+}
+
+BonusInteract* TutorialGame::AddBonusCube(const Vector3& position, Vector3 dimensions, float inverseMass) {
+	bonusApple = new BonusInteract(world, this);
+	bonusApple->SetLayer(6);
+	AABBVolume* volume = new AABBVolume(dimensions);
+	bonusApple->SetBoundingVolume((CollisionVolume*)volume);
+	bonusApple->GetTransform()
+		.SetPosition(position)
+		.SetScale(Vector3(dimensions.x * 2, dimensions.y * 2, dimensions.z * 2));
+
 	bonusApple->SetRenderObject(new RenderObject(&bonusApple->GetTransform(), cubeMesh, basicTex, basicShader));
+	bonusApple->SetPhysicsObject(new PhysicsObject(&bonusApple->GetTransform(), bonusApple->GetBoundingVolume()));
+
+	bonusApple->GetPhysicsObject()->SetInverseMass(1.0f);
+	bonusApple->GetPhysicsObject()->InitCubeInertia();
+	bonusApple->SetHealth(20);
+
+	world->AddGameObject(bonusApple);
+
+	return bonusApple;
+}
+
+BonusInteract* TutorialGame::AddRemovableWall(const Vector3& position, Vector3 dimensions, float inverseMass) {
+	bonusApple = new BonusInteract(world, this);
+	bonusApple->SetLayer(6);
+	AABBVolume* volume = new AABBVolume(dimensions);
+	bonusApple->SetBoundingVolume((CollisionVolume*)volume);
+	bonusApple->GetTransform()
+		.SetPosition(position)
+		.SetScale(Vector3(dimensions.x * 2, dimensions.y * 2, dimensions.z * 2));
+
+	bonusApple->SetRenderObject(new RenderObject(&bonusApple->GetTransform(), cubeMesh, basicTex, basicShader));
+	bonusApple->SetPhysicsObject(new PhysicsObject(&bonusApple->GetTransform(), bonusApple->GetBoundingVolume()));
+
+	bonusApple->GetPhysicsObject()->SetInverseMass(1.0f);
+	bonusApple->GetPhysicsObject()->InitCubeInertia();
+	bonusApple->SetHealth(2000);
+
+	world->AddGameObject(bonusApple);
+
+	return bonusApple;
+}
+
+BonusInteract* TutorialGame::AddBonusCapsule(const Vector3& position, Vector3 dimensions, float inverseMass) {
+	bonusApple = new BonusInteract(world, this);
+	bonusApple->SetLayer(6);
+	AABBVolume* volume = new AABBVolume(dimensions);
+	bonusApple->SetBoundingVolume((CollisionVolume*)volume);
+	bonusApple->GetTransform()
+		.SetPosition(position)
+		.SetScale(Vector3(dimensions.x * 2, dimensions.y * 2, dimensions.z * 2));
+
+	bonusApple->SetRenderObject(new RenderObject(&bonusApple->GetTransform(), capsuleMesh, basicTex, basicShader));
+	bonusApple->SetPhysicsObject(new PhysicsObject(&bonusApple->GetTransform(), bonusApple->GetBoundingVolume()));
+
+	bonusApple->GetPhysicsObject()->SetInverseMass(1.0f);
+	bonusApple->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(bonusApple);
+
+	return bonusApple;
+}
+
+BonusInteract* TutorialGame::AddBonusCone(const Vector3& position) {
+	bonusApple = new BonusInteract(world, this);
+	bonusApple->SetLayer(6);
+	SphereVolume* volume = new SphereVolume(2.5f);
+	bonusApple->SetBoundingVolume((CollisionVolume*)volume);
+	bonusApple->GetTransform()
+		.SetScale(Vector3(2, 2, 2))
+		.SetPosition(position);
+
+	bonusApple->SetRenderObject(new RenderObject(&bonusApple->GetTransform(), coneMesh, basicTex, basicShader));
 	bonusApple->SetPhysicsObject(new PhysicsObject(&bonusApple->GetTransform(), bonusApple->GetBoundingVolume()));
 
 	bonusApple->GetPhysicsObject()->SetInverseMass(1.0f);
@@ -580,6 +664,7 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position, fl
 	sphere->GetPhysicsObject()->InitSphereInertia();
 
 	world->AddGameObject(sphere);
+	sphere->SetGameObject(player); 
 
 	return sphere;
 }
@@ -589,12 +674,16 @@ void TutorialGame::InitDefaultFloor() {
 }
 
 void TutorialGame::InitGameExamples() {
-	AddPlayerToWorld(playerPos);
+	AddPlayerToWorld(Vector3(70, 0, -70));
 	AddEnemyToWorld(Vector3(5, -5, 0));
-	//AddBonusToWorld(Vector3(10, 5, 20));
-	AddAppleToWorld(Vector3(10, 5, 40));
-	InitMazeGrid("TestGrid1.txt");
-	AddAppleToWorld(Vector3(70, 0, 80));
+	InitMazeGrid("TestGrid2.txt");
+	AddBonusCircle(Vector3(40, 10, -40));
+	AddBonusCube(Vector3(20, 5, -40), Vector3(2, 2, 2), 0.0f);
+	AddBonusCube(Vector3(20, 5, -20), Vector3(2, 2, 2), 0.0f);
+	AddBonusCube(Vector3(40, 10, -20), Vector3(2, 2, 2), 0.0f);
+	//AddBonusCone(Vector3(40, 10, -20));
+	//AddBonusCapsule(Vector3(20, 5, -20), Vector3(1, 2, 1), 0.0f);
+	//AddAppleToWorld(Vector3(70, 0, 80));
 }
 
 void TutorialGame::InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius) {
@@ -646,7 +735,7 @@ void TutorialGame::InitMazeGrid(const std::string& filename) {
 		for (int x = 0; x < gridWidth; ++x) {
 			char type = 0;
 			infile >> type;
-			Vector3 position = Vector3((float)(x * nodeSize), -13, (float)(y * nodeSize));
+			Vector3 position = Vector3((float)(x * nodeSize) - 195 , -13, (float)(y * nodeSize) - 195);
 			if (type == 'x') {
 				AddCubeToWorld(position, Vector3(nodeSize / 2, nodeSize / 2, nodeSize / 2), 0.0f);
 			}
