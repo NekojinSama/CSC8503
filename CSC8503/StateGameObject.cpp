@@ -3,6 +3,7 @@
 #include "StateMachine.h"
 #include "State.h"
 #include "PhysicsObject.h"
+#include "TutorialGame.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -10,7 +11,7 @@ using namespace CSC8503;
 StateGameObject::StateGameObject() {
 	counter = 0.0f;
 	stateMachine = new StateMachine();
-	GameObject* playerInfo = TutorialGame::player;
+	//GameObject* playerInfo = TutorialGame::GetPlayer();
 
 	State* stateA = new State([&](float dt)->void {
 		this->MoveLeft(dt);

@@ -8,7 +8,8 @@
 #include "OrientationConstraint.h"
 #include "StateGameObject.h"
 
-//#include <math.h>
+#include <fstream>
+#include "Assets.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -144,6 +145,7 @@ void TutorialGame::UpdateGame(float dt) {
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
 	physics->Update(dt);
+	
 
 	renderer->Render();
 	Debug::UpdateRenderables(dt);
@@ -588,8 +590,9 @@ void TutorialGame::InitGameExamples() {
 	AddPlayerToWorld(playerPos);
 	AddEnemyToWorld(Vector3(5, -5, 0));
 	//AddBonusToWorld(Vector3(10, 5, 20));
-	AddAppleToWorld(Vector3(10, 5, 40));
-	AddAppleToWorld(Vector3(10, 5, 0));
+	//AddAppleToWorld(Vector3(10, 5, 40));
+	//InitMazeGrid("TestGrid1.txt");
+	AddAppleToWorld(Vector3(80, 0, 70));
 }
 
 void TutorialGame::InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius) {
@@ -625,6 +628,26 @@ void TutorialGame::InitCubeGridWorld(int numRows, int numCols, float rowSpacing,
 		for (int z = 1; z < numRows+1; ++z) {
 			Vector3 position = Vector3(x * colSpacing, 10.0f, z * rowSpacing);
 			AddCubeToWorld(position, cubeDims, 1.0f);
+		}
+	}
+}
+
+void TutorialGame::InitMazeGrid(const std::string& filename) {
+	int nodeSize, gridWidth, gridHeight;
+	std::ifstream infile(Assets::DATADIR  + filename);
+
+	infile >> nodeSize;
+	infile >> gridWidth;
+	infile >> gridHeight;
+
+	for (int y = 0; y < gridHeight; ++y) {
+		for (int x = 0; x < gridWidth; ++x) {
+			char type = 0;
+			infile >> type;
+			Vector3 position = Vector3((float)(x * nodeSize), -13, (float)(y * nodeSize));
+			if (type == 'x') {
+				AddCubeToWorld(position, Vector3(nodeSize / 2, nodeSize / 2, nodeSize / 2), 0.0f);
+			}
 		}
 	}
 }

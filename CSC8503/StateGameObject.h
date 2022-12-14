@@ -1,12 +1,13 @@
 #pragma once
 #include "GameObject.h"
-#include "TutorialGame.h"
+//#include "TutorialGame.h"
 #include <vector>
 
 namespace NCL {
     namespace CSC8503 {
         class StateMachine;
-        class StateGameObject : public GameObject , public TutorialGame {
+        //class TutorialGame;
+        class StateGameObject : public GameObject /*, public TutorialGame */{
         public:
             StateGameObject();
             ~StateGameObject();

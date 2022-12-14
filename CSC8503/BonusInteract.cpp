@@ -21,7 +21,6 @@ void BonusInteract::OnCollisionBegin(GameObject* otherObject)
 {
 	if (otherObject == tutoGame->GetPlayer())
 	{
-		//renderObject->SetMesh(nullptr);
 		this->isActive = false;
 		zaWorld->RemoveGameObject(this, true);
 	}

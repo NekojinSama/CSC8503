@@ -118,6 +118,7 @@ void PhysicsSystem::Update(float dt) {
 
 	UpdateCollisionList(); //Remove any old collisions
 
+
 	t.Tick();
 	float updateTime = t.GetTimeDeltaSeconds();
 
@@ -167,13 +168,16 @@ void PhysicsSystem::UpdateCollisionList() {
 		in.framesLeft--;
 
 		if ((*i).framesLeft < 0) {
+			
 			i->a->OnCollisionEnd(i->b);
 			i->b->OnCollisionEnd(i->a);
 			i = allCollisions.erase(i);
 		}
 		else {
+			
 			++i;
 		}
+		//if(!i->a->IsActive() )
 	}
 }
 
