@@ -80,8 +80,13 @@ void GameWorld::UpdateWorld(float dt) {
 	}
 
 	/*for (auto i = gameObjects.begin(); i < gameObjects.end(); i++) {
-		if(i->isActive())
+		if(&i->isActive())
 	}*/
+	for (GameObject* g : gameObjects) {
+		if (!g->IsActive()) {
+			RemoveGameObject(g, true);
+		}
+	}
 }
 
 bool GameWorld::Raycast(Ray& r, RayCollision& closestCollision, bool closestObject, GameObject* ignoreThis) const {

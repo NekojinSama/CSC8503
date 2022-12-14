@@ -142,6 +142,8 @@ void TutorialGame::UpdateGame(float dt) {
 	SelectObject();
 	MoveSelectedObject();
 
+	//world->GetObjectIterators();
+
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
 	physics->Update(dt);
@@ -591,7 +593,7 @@ void TutorialGame::InitGameExamples() {
 	AddEnemyToWorld(Vector3(5, -5, 0));
 	//AddBonusToWorld(Vector3(10, 5, 20));
 	//AddAppleToWorld(Vector3(10, 5, 40));
-	//InitMazeGrid("TestGrid1.txt");
+	InitMazeGrid("TestGrid1.txt");
 	AddAppleToWorld(Vector3(80, 0, 70));
 }
 
