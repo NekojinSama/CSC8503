@@ -384,7 +384,7 @@ void TutorialGame::InitWorld() {
 	InitGameExamples();
 	InitDefaultFloor();
 	//BridgeConstraintTest();
-	testStateObject = AddStateObjectToWorld(Vector3(0, 0, -10), 1.0f, 1);
+	testStateObject = AddStateObjectToWorld(Vector3(-180, 0, -80) + offset, 1.0f, 1);
 }
 
 /*
@@ -670,17 +670,17 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position, fl
 }
 
 void TutorialGame::InitDefaultFloor() {
-	AddFloorToWorld(Vector3(0, -20, 0));
+	AddFloorToWorld(Vector3(0, -20+13, 0) + offset);
 }
 
 void TutorialGame::InitGameExamples() {
-	AddPlayerToWorld(Vector3(70, 0, -70));
-	AddEnemyToWorld(Vector3(5, -5, 0));
+	AddPlayerToWorld(Vector3(70, 0, -70)+ offset);
+	AddEnemyToWorld(Vector3(5, -5, 0) + Vector3(195, 0, 195) + offset);
 	InitMazeGrid("TestGrid2.txt");
-	AddBonusCircle(Vector3(40, 10, -40));
-	AddBonusCube(Vector3(20, 5, -40), Vector3(2, 2, 2), 0.0f);
-	AddBonusCube(Vector3(20, 5, -20), Vector3(2, 2, 2), 0.0f);
-	AddBonusCube(Vector3(40, 10, -20), Vector3(2, 2, 2), 0.0f);
+	AddBonusCircle(Vector3(40, 10, -40) + offset);
+	AddBonusCube(Vector3(20, 5, -40) + offset, Vector3(2, 2, 2), 0.0f);
+	AddBonusCube(Vector3(20, 5, -20) + offset, Vector3(2, 2, 2), 0.0f);
+	AddBonusCube(Vector3(40, 10, -20) + offset, Vector3(2, 2, 2), 0.0f);
 	//AddBonusCone(Vector3(40, 10, -20));
 	//AddBonusCapsule(Vector3(20, 5, -20), Vector3(1, 2, 1), 0.0f);
 	//AddAppleToWorld(Vector3(70, 0, 80));
@@ -735,7 +735,7 @@ void TutorialGame::InitMazeGrid(const std::string& filename) {
 		for (int x = 0; x < gridWidth; ++x) {
 			char type = 0;
 			infile >> type;
-			Vector3 position = Vector3((float)(x * nodeSize) - 195 , -13, (float)(y * nodeSize) - 195);
+			Vector3 position = Vector3((float)(x * nodeSize) , 0, (float)(y * nodeSize));
 			if (type == 'x') {
 				AddCubeToWorld(position, Vector3(nodeSize / 2, nodeSize / 2, nodeSize / 2), 0.0f);
 			}

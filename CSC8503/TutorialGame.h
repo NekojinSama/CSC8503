@@ -119,6 +119,7 @@ namespace NCL {
 			bool onGround = false;
 			float pitch;
 			float yaw;
+			Vector3 offset = Vector3(195, 0, 195);
 		};
 	}
 }
