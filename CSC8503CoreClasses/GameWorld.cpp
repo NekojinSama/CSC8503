@@ -3,7 +3,7 @@
 #include "Constraint.h"
 #include "CollisionDetection.h"
 #include "Camera.h"
-#include "PositionConstraint.h"
+#include "PositionConstraintY.h"
 
 
 using namespace NCL;
@@ -146,8 +146,9 @@ void GameWorld::AddConstraintWalls() {
 		if (g->GetLayer() == 8) {
 			for (GameObject* f : gameObjects)
 			if (f->GetLayer() == 7) {
-				PositionConstraint* constraint = new PositionConstraint(g, f, 15);
+				PositionConstraintY* constraint = new PositionConstraintY(g, f, 15);
 				constraints.emplace_back(constraint);
+				/*f->GetPhysicsObject()->SetInverseMass(0.0f);*/
 			}
 		}
 	}

@@ -5,10 +5,10 @@ namespace NCL {
 	namespace CSC8503 {
 		class GameObject;
 
-		class PositionConstraint : public Constraint	{
+		class PositionConstraintY : public Constraint	{
 		public:
-			PositionConstraint(GameObject* a, GameObject* b, float d);
-			~PositionConstraint();
+			PositionConstraintY(GameObject* a, GameObject* b, float d);
+			~PositionConstraintY();
 
 			void UpdateConstraint(float dt) override;
 

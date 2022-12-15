@@ -76,6 +76,8 @@ set(Physics
      "constraint.h"  
     "PositionConstraint.cpp"
     "PositionConstraint.h"
+    "PositionConstraintY.h"
+    "PositionConstraintY.cpp"
     "OrientationConstraint.cpp"
     "OrientationConstraint.h"
     "PhysicsObject.cpp"

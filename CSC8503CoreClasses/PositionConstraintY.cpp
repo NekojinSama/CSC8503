@@ -1,4 +1,4 @@
-#include "PositionConstraint.h"
+#include "PositionConstraintY.h"
 //#include "../../Common/Vector3.h"
 #include "GameObject.h"
 #include "PhysicsObject.h"
@@ -7,24 +7,24 @@
 
 
 using namespace NCL;
-using namespace Maths;
+//using namespace Maths;
 using namespace CSC8503;
 
-PositionConstraint::PositionConstraint(GameObject* a, GameObject* b, float d)
+PositionConstraintY::PositionConstraintY(GameObject* a, GameObject* b, float d)
 {
 	objectA		= a;
 	objectB		= b;
 	distance	= d;
 }
 
-PositionConstraint::~PositionConstraint()
+PositionConstraintY::~PositionConstraintY()
 {
 
 }
 
 //a simple constraint that stops objects from being more than <distance> away
 //from each other...this would be all we need to simulate a rope, or a ragdoll
-void PositionConstraint::UpdateConstraint(float dt)	{
+void PositionConstraintY::UpdateConstraint(float dt)	{
 	Vector3 relativePos = objectA->GetTransform().GetPosition() - objectB->GetTransform().GetPosition();
 	float currentDistance = relativePos.Length();
 	float offset = distance - currentDistance;
@@ -48,8 +48,8 @@ void PositionConstraint::UpdateConstraint(float dt)	{
 			Vector3 aImpulse = offsetDir * lambda;
 			Vector3 bImpulse = -offsetDir * lambda;
 
-			physA->ApplyLinearImpulse(aImpulse);
-			physB->ApplyLinearImpulse(bImpulse);
+			physA->ApplyLinearImpulse(Vector3(0, aImpulse.y, 0));
+			physB->ApplyLinearImpulse(Vector3(0, bImpulse.y, 0));
 		}
 	}
 }
