@@ -383,7 +383,7 @@ void TutorialGame::InitWorld() {
 
 	InitGameExamples();
 	InitDefaultFloor();
-	//BridgeConstraintTest();
+	BridgeConstraintTest();
 	testStateObject = AddStateObjectToWorld(Vector3(50, 0, -140) + offset, 1.0f, 1);
 }
 
@@ -456,6 +456,30 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 		.SetScale(Vector3(dimensions.x * 2,dimensions.y * 2, dimensions.z * 2));
 
 	cube->SetLayer(3);
+
+	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
+	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
+
+	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
+	cube->GetPhysicsObject()->SetElasticity(0.4f);
+	cube->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(cube);
+
+	return cube;
+}
+
+GameObject* TutorialGame::AddDoorPull(string objName, const Vector3& position, Vector3 dimensions, float inverseMass) {
+	GameObject* cube = new GameObject(objName);
+
+	AABBVolume* volume = new AABBVolume(dimensions);
+	cube->SetBoundingVolume((CollisionVolume*)volume);
+
+	cube->GetTransform()
+		.SetPosition(position)
+		.SetScale(Vector3(dimensions.x * 2,dimensions.y * 2, dimensions.z * 2));
+
+	cube->SetLayer(8);
 
 	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
 	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
@@ -562,7 +586,7 @@ BonusInteract* TutorialGame::AddBonusCube(const Vector3& position, Vector3 dimen
 	return bonusApple;
 }
 
-BonusInteract* TutorialGame::AddRemovableWall(const Vector3& position, Vector3 dimensions, float inverseMass, bool status) {
+BonusInteract* TutorialGame::AddRemovableWall(string objName, const Vector3& position, Vector3 dimensions, float inverseMass, bool status) {
 	bonusApple = new BonusInteract(world, this);
 	bonusApple->SetLayer(7);
 	AABBVolume* volume = new AABBVolume(dimensions);
@@ -763,12 +787,12 @@ void TutorialGame::InitMazeGrid(const std::string& filename) {
 				AddCubeToWorld(position, Vector3(nodeSize / 2, nodeSize / 2, nodeSize / 2), 0.0f);
 			}
 			if (type == 'm') {
-				AddRemovableWall(position, Vector3(nodeSize / 2, nodeSize / 2, nodeSize / 2), 0.0001f, true);
+				AddDoorPull("pull1", Vector3(position.x, 35, position.z), Vector3(nodeSize / 2, nodeSize / 2, nodeSize / 2), 0.0f);
+				AddRemovableWall("wall1", Vector3(position.x, 5, position.z), Vector3(nodeSize / 2, nodeSize / 2, nodeSize / 2), 0.0001f, true);
 			}
 			if (type == 'l') {
 				AddSwitchButton(Vector3(position.x,-5,position.z), Vector3(nodeSize / 2, nodeSize / 4, nodeSize / 2), 0.0f);
 			}
-			
 		}
 	}
 }
@@ -778,12 +802,13 @@ void TutorialGame::BridgeConstraintTest() {
 
 	float invCubeMass = 5;
 	int numLinks = 10;
-	float maxDistance = 30;
+	float maxDistance = 10;
 	float cubeDistance = 20;
 
-	Vector3 startPos = Vector3(0, 30, 30);
+	Vector3 startPos = Vector3(10, 30, 30);
 	GameObject* start = AddCubeToWorld(startPos + Vector3(0, 0, 0), cubeSize, 0);
-	GameObject* end = AddCubeToWorld(startPos + Vector3((numLinks+2) * cubeDistance, 0, 0), cubeSize, 0);
+	GameObject* star = AddCubeToWorld(startPos + Vector3(0, -5, 0), cubeSize, 0.001);
+	/*GameObject* end = AddCubeToWorld(startPos + Vector3((numLinks+2) * cubeDistance, 0, 0), cubeSize, 0);
 	GameObject* previous = start;
 
 	for (int i = 0; i < numLinks; ++i) {
@@ -791,10 +816,12 @@ void TutorialGame::BridgeConstraintTest() {
 		PositionConstraint* constraint = new PositionConstraint(previous, block, maxDistance);
 		world->AddConstraint(constraint);
 		previous = block;
-	}
-
-	PositionConstraint* constraint = new PositionConstraint(previous, end, maxDistance);
+	}*/
+	PositionConstraint* constraint = new PositionConstraint(start, star, maxDistance);
 	world->AddConstraint(constraint);
+	/*for (GameObject* g : world->GetObjectIterators(g,f)) {
+		f(g);
+	}*/
 }
 
 /*

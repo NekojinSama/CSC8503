@@ -3,6 +3,7 @@
 #include "Constraint.h"
 #include "CollisionDetection.h"
 #include "Camera.h"
+#include "PositionConstraint.h"
 
 
 using namespace NCL;
@@ -85,7 +86,14 @@ void GameWorld::UpdateWorld(float dt) {
 	for (GameObject* g : gameObjects) {
 		if (!g->IsActive()) {
 			RemoveGameObject(g, true);
+			setObjCount(getObjCount() + 1);
 		}
+	}
+
+	Debug::Print("Destroyed Count: " + std::to_string(getObjCount()), Vector2(60, 10), Debug::BLUE);
+
+	if (getObjCount() > 0) {
+		AddConstraintWalls();
 	}
 }
 
@@ -131,6 +139,18 @@ Constraint Tutorial Stuff
 
 void GameWorld::AddConstraint(Constraint* c) {
 	constraints.emplace_back(c);
+}
+
+void GameWorld::AddConstraintWalls() {
+	for (GameObject* g : gameObjects) {
+		if (g->GetLayer() == 8) {
+			for (GameObject* f : gameObjects)
+			if (f->GetLayer() == 7) {
+				PositionConstraint* constraint = new PositionConstraint(g, f, 15);
+				constraints.emplace_back(constraint);
+			}
+		}
+	}
 }
 
 void GameWorld::RemoveConstraint(Constraint* c, bool andDelete) {

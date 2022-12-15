@@ -13,6 +13,7 @@ StateGameObject::StateGameObject() {
 	counter = 0.0f;
 	stateMachine = new StateMachine();
 	GameObject* playerInfo = GetGameObject();
+	TestPathfinding();
 
 	State* stateA = new State([&](float dt)->void {
 		this->MovePatrol(GetGameObject());
@@ -31,6 +32,8 @@ StateGameObject::StateGameObject() {
 		return !chase;
 		/*return this->chase = false;*/
 		}));
+
+	
 }
 
 StateGameObject::~StateGameObject() {
@@ -39,7 +42,7 @@ StateGameObject::~StateGameObject() {
 
 void StateGameObject::Update(float dt) {
 	stateMachine->Update(dt);
-	TestPathfinding();
+	
 	DisplayPathfinding();
 }
 
@@ -102,11 +105,13 @@ void StateGameObject::ChasePlayer(GameObject* player) {
 
 std::vector<Vector3> testNodes;
 void StateGameObject::TestPathfinding() {
-	NavigationGrid grid("TestGrid1.txt");
+	NavigationGrid grid("TestGrid2.txt");
 	NavigationPath outPath;
 
-	Vector3 startPos(this->GetTransform().GetPosition());
-	Vector3 endPos(GetGameObject()->GetTransform().GetPosition());
+	/*Vector3 startPos(this->GetTransform().GetPosition());*/
+	Vector3 startPos(380,0,230);
+	/*Vector3 endPos(GetGameObject()->GetTransform().GetPosition());*/
+	Vector3 endPos(380,0,290);
 
 	/*if (TutorialGame().GetPlayerPosition().x != 0) {
 		endPos = TutorialGame().GetPlayerPosition();

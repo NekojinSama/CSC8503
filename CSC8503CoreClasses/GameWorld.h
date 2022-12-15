@@ -26,6 +26,7 @@ namespace NCL {
 			void RemoveGameObject(GameObject* o, bool andDelete = false);
 
 			void AddConstraint(Constraint* c);
+			void AddConstraintWalls();
 			void RemoveConstraint(Constraint* c, bool andDelete = false);
 
 			Camera* GetMainCamera() const {
@@ -58,6 +59,14 @@ namespace NCL {
 				return worldStateCounter;
 			}
 
+			void setObjCount(int val) {
+				destroyObjCount = val;
+			}
+
+			int getObjCount() {
+				return destroyObjCount;
+			}
+
 		protected:
 			std::vector<GameObject*> gameObjects;
 			std::vector<Constraint*> constraints;
@@ -68,6 +77,7 @@ namespace NCL {
 			bool shuffleObjects;
 			int		worldIDCounter;
 			int		worldStateCounter;
+			int		destroyObjCount;
 		};
 	}
 }
