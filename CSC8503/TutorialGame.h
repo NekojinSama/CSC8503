@@ -63,7 +63,8 @@ namespace NCL {
 			GameObject* AddBonusToWorld(const Vector3& position);
 			BonusInteract* AddBonusCircle(const Vector3& position);
 			BonusInteract* AddBonusCube(const Vector3& position, Vector3 dimensions, float inverseMass);
-			BonusInteract* AddRemovableWall(const Vector3& position, Vector3 dimensions, float inverseMass);
+			BonusInteract* AddRemovableWall(const Vector3& position, Vector3 dimensions, float inverseMass, bool status);
+			BonusInteract* AddSwitchButton(const Vector3& position, Vector3 dimensions, float inverseMass);
 			BonusInteract* AddBonusCapsule(const Vector3& position, Vector3 dimensions, float inverseMass);
 			BonusInteract* AddBonusCone(const Vector3& position);
 

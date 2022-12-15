@@ -105,7 +105,7 @@ namespace NCL::CSC8503 {
 		int			hp;
 		std::string	name;
 		float		dampForce;
-		Vector3 broadphaseAABB;
+		Vector3		broadphaseAABB;
 	};
 }
 

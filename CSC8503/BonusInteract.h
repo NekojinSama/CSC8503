@@ -12,9 +12,18 @@ namespace NCL {
 
 			void OnCollisionBegin(GameObject* otherObject) override;
 
+			void SetDoorStatus(bool val) {
+				door = val;
+			}
+			bool GetDoorStatus() {
+				return door;
+			}
+
 		protected:
 			TutorialGame* tutoGame;
 			GameWorld* zaWorld;
+			float timer = 5.0f;
+			bool door = true;
 		};
 	}
 }

@@ -384,7 +384,7 @@ void TutorialGame::InitWorld() {
 	InitGameExamples();
 	InitDefaultFloor();
 	//BridgeConstraintTest();
-	testStateObject = AddStateObjectToWorld(Vector3(-180, 0, -80) + offset, 1.0f, 1);
+	testStateObject = AddStateObjectToWorld(Vector3(50, 0, -140) + offset, 1.0f, 1);
 }
 
 /*
@@ -534,7 +534,7 @@ BonusInteract* TutorialGame::AddBonusCircle(const Vector3& position) {
 
 	bonusApple->GetPhysicsObject()->SetInverseMass(1.0f);
 	bonusApple->GetPhysicsObject()->InitSphereInertia();
-	bonusApple->SetHealth(100);
+	bonusApple->SetHealth(3);
 
 	world->AddGameObject(bonusApple);
 
@@ -555,18 +555,19 @@ BonusInteract* TutorialGame::AddBonusCube(const Vector3& position, Vector3 dimen
 
 	bonusApple->GetPhysicsObject()->SetInverseMass(1.0f);
 	bonusApple->GetPhysicsObject()->InitCubeInertia();
-	bonusApple->SetHealth(20);
+	bonusApple->SetHealth(10);
 
 	world->AddGameObject(bonusApple);
 
 	return bonusApple;
 }
 
-BonusInteract* TutorialGame::AddRemovableWall(const Vector3& position, Vector3 dimensions, float inverseMass) {
+BonusInteract* TutorialGame::AddRemovableWall(const Vector3& position, Vector3 dimensions, float inverseMass, bool status) {
 	bonusApple = new BonusInteract(world, this);
-	bonusApple->SetLayer(6);
+	bonusApple->SetLayer(7);
 	AABBVolume* volume = new AABBVolume(dimensions);
 	bonusApple->SetBoundingVolume((CollisionVolume*)volume);
+	/*this->IsActive = status;*/
 	bonusApple->GetTransform()
 		.SetPosition(position)
 		.SetScale(Vector3(dimensions.x * 2, dimensions.y * 2, dimensions.z * 2));
@@ -574,7 +575,29 @@ BonusInteract* TutorialGame::AddRemovableWall(const Vector3& position, Vector3 d
 	bonusApple->SetRenderObject(new RenderObject(&bonusApple->GetTransform(), cubeMesh, basicTex, basicShader));
 	bonusApple->SetPhysicsObject(new PhysicsObject(&bonusApple->GetTransform(), bonusApple->GetBoundingVolume()));
 
-	bonusApple->GetPhysicsObject()->SetInverseMass(1.0f);
+	bonusApple->GetPhysicsObject()->SetInverseMass(inverseMass);
+	bonusApple->GetPhysicsObject()->InitCubeInertia();
+	bonusApple->SetHealth(2000);
+
+	world->AddGameObject(bonusApple);
+
+	return bonusApple;
+}
+
+BonusInteract* TutorialGame::AddSwitchButton(const Vector3& position, Vector3 dimensions, float inverseMass) {
+	bonusApple = new BonusInteract(world, this);
+	bonusApple->SetLayer(8);
+	AABBVolume* volume = new AABBVolume(dimensions);
+	bonusApple->SetBoundingVolume((CollisionVolume*)volume);
+	bonusApple->GetTransform()
+		.SetPosition(position)
+		.SetScale(Vector3(dimensions.x * 2, dimensions.y * 2, dimensions.z * 2));
+
+	bonusApple->SetRenderObject(new RenderObject(&bonusApple->GetTransform(), cubeMesh, basicTex, basicShader));
+	bonusApple->GetRenderObject()->SetColour(Debug::RED);
+	bonusApple->SetPhysicsObject(new PhysicsObject(&bonusApple->GetTransform(), bonusApple->GetBoundingVolume()));
+
+	bonusApple->GetPhysicsObject()->SetInverseMass(inverseMass);
 	bonusApple->GetPhysicsObject()->InitCubeInertia();
 	bonusApple->SetHealth(2000);
 
@@ -739,6 +762,13 @@ void TutorialGame::InitMazeGrid(const std::string& filename) {
 			if (type == 'x') {
 				AddCubeToWorld(position, Vector3(nodeSize / 2, nodeSize / 2, nodeSize / 2), 0.0f);
 			}
+			if (type == 'm') {
+				AddRemovableWall(position, Vector3(nodeSize / 2, nodeSize / 2, nodeSize / 2), 0.0001f, true);
+			}
+			if (type == 'l') {
+				AddSwitchButton(Vector3(position.x,-5,position.z), Vector3(nodeSize / 2, nodeSize / 4, nodeSize / 2), 0.0f);
+			}
+			
 		}
 	}
 }
