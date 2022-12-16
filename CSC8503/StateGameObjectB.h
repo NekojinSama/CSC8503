@@ -37,13 +37,12 @@ namespace NCL {
             void TestBehaviourTree();
 
         protected:
-            void MoveLeft(float dt);
             void drawRay(GameObject* player);
             void MovePatrol(GameObject* player);
             void goBeserk(GameObject* player);
             void ChasePlayer(GameObject* player);
 
-            vector <Vector3> posList2 = { Vector3(180, 0, -130), Vector3(120, 0, -170), Vector3(80, 0, -170), Vector3(80, 0, -130) };
+            vector <Vector3> posList2 = { Vector3(100, 0, -140), Vector3(50, 0, -140), Vector3(50, 0, -60), Vector3(100, 0, -60) };
 
             StateMachine*   stateMachine;
             bool            chase = false;

@@ -51,12 +51,6 @@ void StateGameObjectB::Update(float dt) {
 	}
 }
 
-void StateGameObjectB::MoveLeft(float dt) {
-	GetPhysicsObject()->ClearForces();
-	GetPhysicsObject()->AddForce({ -10, 0, 0 });
-	counter += dt;
-}
-
 void StateGameObjectB::drawRay(GameObject* player) {
 	Ray isPlayer(this->GetTransform().GetPosition(), (this->GetTransform().GetPosition() - GetGameObject()->GetTransform().GetPosition()).Normalised());
 	RayCollision coll;
