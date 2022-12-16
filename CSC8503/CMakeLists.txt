@@ -8,6 +8,7 @@ set(Header_Files
     "NetworkedGame.h"
     "NetworkPlayer.h"
     "StateGameObject.h"
+    "AiPathFollow.h"
     "TutorialGame.h"
     "BonusInteract.h"
 )
@@ -19,6 +20,7 @@ set(Source_Files
     "NetworkedGame.cpp"
     "NetworkPlayer.cpp"
     "StateGameObject.cpp"
+    "AiPathFollow.cpp"
     "TutorialGame.cpp"
     "BonusInteract.cpp"
 )

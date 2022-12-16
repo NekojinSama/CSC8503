@@ -26,7 +26,7 @@ namespace NCL {
 			void RemoveGameObject(GameObject* o, bool andDelete = false);
 
 			void AddConstraint(Constraint* c);
-			void AddConstraintWalls();
+			Constraint* AddConstraintWalls();
 			void RemoveConstraint(Constraint* c, bool andDelete = false);
 
 			Camera* GetMainCamera() const {
@@ -72,6 +72,7 @@ namespace NCL {
 			std::vector<Constraint*> constraints;
 
 			Camera* mainCamera;
+			Constraint* wallUp;
 
 			bool shuffleConstraints;
 			bool shuffleObjects;

@@ -7,6 +7,7 @@
 #include "BonusInteract.h"
 
 #include "StateGameObject.h"
+#include "AiPathFollow.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -70,7 +71,9 @@ namespace NCL {
 			BonusInteract* AddBonusCone(const Vector3& position);
 
 			StateGameObject* AddStateObjectToWorld(const Vector3& position, float radius, float inverseMass);
+			AiPathFollow* AddPathToWorld(const Vector3& position, float radius, float inverseMass);
 			StateGameObject* testStateObject;
+			AiPathFollow* pathObject;
 
 
 #ifdef USEVULKAN

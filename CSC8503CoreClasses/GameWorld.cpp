@@ -92,8 +92,12 @@ void GameWorld::UpdateWorld(float dt) {
 
 	Debug::Print("Destroyed Count: " + std::to_string(getObjCount()), Vector2(60, 10), Debug::BLUE);
 
-	if (getObjCount() > 0) {
-		AddConstraintWalls();
+	if (getObjCount() > 2) {
+		wallUp = AddConstraintWalls();
+	}
+
+	if (getObjCount() > 3) {
+		RemoveConstraint(wallUp, true);
 	}
 }
 
@@ -141,14 +145,15 @@ void GameWorld::AddConstraint(Constraint* c) {
 	constraints.emplace_back(c);
 }
 
-void GameWorld::AddConstraintWalls() {
+Constraint* GameWorld::AddConstraintWalls() {
 	for (GameObject* g : gameObjects) {
 		if (g->GetLayer() == 8) {
 			for (GameObject* f : gameObjects)
 			if (f->GetLayer() == 7) {
-				PositionConstraintY* constraint = new PositionConstraintY(g, f, 15);
-				constraints.emplace_back(constraint);
+				wallUp = new PositionConstraintY(g, f, 15);
+				constraints.emplace_back(wallUp);
 				/*f->GetPhysicsObject()->SetInverseMass(0.0f);*/
+				return(wallUp);
 			}
 		}
 	}

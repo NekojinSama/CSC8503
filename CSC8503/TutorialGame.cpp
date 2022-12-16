@@ -7,6 +7,7 @@
 #include "PositionConstraint.h"
 #include "OrientationConstraint.h"
 #include "StateGameObject.h"
+#include "AiPathFollow.h"
 
 #include <fstream>
 #include "Assets.h"
@@ -103,7 +104,12 @@ void TutorialGame::UpdateGame(float dt) {
 		testStateObject -> Update(dt);
 	}
 
+	if (pathObject) {
+		pathObject->Update(dt);
+	}
+
 	UpdateKeys();
+	//StateGameObject::TestBehaviourTree();
 
 	if (useGravity) {
 		
@@ -385,6 +391,7 @@ void TutorialGame::InitWorld() {
 	InitDefaultFloor();
 	BridgeConstraintTest();
 	testStateObject = AddStateObjectToWorld(Vector3(50, 0, -140) + offset, 1.0f, 1);
+	pathObject = AddPathToWorld(Vector3(185, 0, 35) + offset, 3.0f, 1);
 }
 
 /*
@@ -712,6 +719,32 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position, fl
 
 	world->AddGameObject(sphere);
 	sphere->SetGameObject(player); 
+
+	return sphere;
+}
+
+AiPathFollow* TutorialGame::AddPathToWorld(const Vector3& position, float radius, float inverseMass) {
+	AiPathFollow* sphere = new AiPathFollow();
+
+	Vector3 sphereSize = Vector3(radius, radius, radius);
+	SphereVolume* volume = new SphereVolume(radius);
+	sphere->SetBoundingVolume((CollisionVolume*)volume);
+
+	sphere->GetTransform()
+		.SetScale(sphereSize)
+		.SetPosition(position);
+
+	sphere->SetLayer(5);
+
+	sphere->SetRenderObject(new RenderObject(&sphere->GetTransform(), sphereMesh, basicTex, basicShader));
+	sphere->SetPhysicsObject(new PhysicsObject(&sphere->GetTransform(), sphere->GetBoundingVolume()));
+
+	sphere->GetPhysicsObject()->SetInverseMass(inverseMass);
+	sphere->GetPhysicsObject()->SetElasticity(1.0f);
+	sphere->GetPhysicsObject()->InitSphereInertia();
+
+	world->AddGameObject(sphere);
+	sphere->SetGameObject(player);
 
 	return sphere;
 }

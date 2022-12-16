@@ -7,10 +7,10 @@ namespace NCL {
     namespace CSC8503 {
         class StateMachine;
         class TutorialGame;
-        class StateGameObject : public GameObject /*, public TutorialGame */{
+        class AiPathFollow : public GameObject /*, public TutorialGame */{
         public:
-            StateGameObject();
-            ~StateGameObject();
+            AiPathFollow();
+            ~AiPathFollow();
 
             virtual void Update(float dt);
             void SetGameObject(GameObject* player) {
@@ -25,8 +25,6 @@ namespace NCL {
             void TestBehaviourTree();
 
         protected:
-            void MoveLeft(float dt);
-            void MoveRight(float dt);
             void MovePatrol(GameObject* player);
             void ChasePlayer(GameObject* player);
 
@@ -34,8 +32,9 @@ namespace NCL {
 
             StateMachine*   stateMachine;
             bool            chase = false;
+            bool            forward = true;
             float           counter;
-            int             instance;
+            int             curInstance;
             GameObject*     playerObj;
 
         private:
