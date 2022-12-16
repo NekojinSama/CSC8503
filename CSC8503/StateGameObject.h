@@ -28,9 +28,10 @@ namespace NCL {
             void MoveLeft(float dt);
             void MoveRight(float dt);
             void MovePatrol(GameObject* player);
+            void goBeserk(GameObject* player);
             void ChasePlayer(GameObject* player);
 
-            vector <Vector3> posList = { Vector3(120, 0, -140), Vector3(120, 0, -190), Vector3(50, 0, -190), Vector3(50, 0, -140) };
+            vector <Vector3> posList = { Vector3(180, 0, -130), Vector3(120, 0, -170), Vector3(80, 0, -170), Vector3(80, 0, -130) };
 
             StateMachine*   stateMachine;
             bool            chase = false;

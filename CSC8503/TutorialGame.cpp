@@ -744,7 +744,6 @@ AiPathFollow* TutorialGame::AddPathToWorld(const Vector3& position, float radius
 	sphere->GetPhysicsObject()->InitSphereInertia();
 
 	world->AddGameObject(sphere);
-	sphere->SetGameObject(player);
 
 	return sphere;
 }

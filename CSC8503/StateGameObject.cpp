@@ -18,7 +18,6 @@ StateGameObject::StateGameObject() {
 	counter = 0.0f;
 	stateMachine = new StateMachine();
 	GameObject* playerInfo = GetGameObject();
-	//TestPathfinding();
 
 	State* stateA = new State([&](float dt)->void {
 		this->MovePatrol(GetGameObject());
@@ -44,8 +43,6 @@ StateGameObject::~StateGameObject() {
 
 void StateGameObject::Update(float dt) {
 	stateMachine->Update(dt);
-	//TestBehaviourTree();
-	//DisplayPathfinding();
 }
 
 void StateGameObject::MoveLeft(float dt) {
@@ -72,6 +69,23 @@ void StateGameObject::MovePatrol(GameObject* player) {
 	}
 }
 
+void StateGameObject::goBeserk(GameObject* player) {
+	GetPhysicsObject()->ClearForces();
+	int i = 0;
+	Vector3 moveDir = (posList.at(instance) + Vector3(195, 0, 195)) - this->GetTransform().GetPosition();
+	this->GetPhysicsObject()->AddForce(Vector3(moveDir.Normalised().x * 2, 10, moveDir.Normalised().z * 2));
+	if ((moveDir * Vector3(1, 0, 1)).Length() < 1.0f) {
+		(instance == posList.size() - 1 ? instance = 0 : instance++);
+	}
+	Vector2 Dis, Obj;
+	Dis = Vector2(player->GetTransform().GetPosition().x, player->GetTransform().GetPosition().z);
+	Obj = Vector2(this->GetTransform().GetPosition().x, this->GetTransform().GetPosition().z);
+	float distance = (Dis - Obj).Length();
+	if (distance < 20) {
+		chase = true;
+	}
+}
+
 void StateGameObject::ChasePlayer(GameObject* player) {
 	Vector2 Dis, Obj;
 	Dis = Vector2(player->GetTransform().GetPosition().x, player->GetTransform().GetPosition().z);
@@ -84,59 +98,27 @@ void StateGameObject::ChasePlayer(GameObject* player) {
 	}
 }
 
-//std::vector<Vector3> testNodes;
-//void StateGameObject::TestPathfinding() {
-//	NavigationGrid grid("TestGrid2.txt");
-//	NavigationPath outPath;
-//
-//	/*Vector3 startPos(this->GetTransform().GetPosition());*/
-//	Vector3 startPos(380,0,230);
-//	/*Vector3 endPos(GetGameObject()->GetTransform().GetPosition());*/
-//	Vector3 endPos(380,0,290);
-//
-//	/*if (TutorialGame().GetPlayerPosition().x != 0) {
-//		endPos = TutorialGame().GetPlayerPosition();
-//	}*/
-//
-//	bool found = grid.FindPath(startPos, endPos, outPath);
-//
-//	Vector3 pos;
-//	while (outPath.PopWaypoint(pos)) {
-//		testNodes.push_back(pos);
-//	}
-//}
-//
-//void StateGameObject::DisplayPathfinding() {
-//	for (int i = 1; i < testNodes.size(); ++i) {
-//		Vector3 a = testNodes[i - 1];
-//		Vector3 b = testNodes[i];
-//
-//		Debug::DrawLine(a, b, Vector4(0, 1, 0, 1));
-//	}
-//}
-
 void StateGameObject::TestBehaviourTree() {
 	float behaviourTimer;
 	float distanceToTarget;
-	BehaviourAction* findKey = new BehaviourAction("Find Key", [&](float dt, BehaviourState state)->BehaviourState {
+	BehaviourAction* patrolArea = new BehaviourAction("Patrol Area", [&](float dt, BehaviourState state)->BehaviourState {
 		if (state == Initialise) {
-			std::cout << "Looking for a key\n";
+			StateGameObject::MovePatrol(GetGameObject());
 			behaviourTimer = rand() % 100;
 			state = Ongoing;
 		}
 		else if (state == Ongoing) {
 			behaviourTimer -= dt;
 			if (behaviourTimer <= 0.0f) {
-				std::cout << "Found a key!\n";
 				return Success;
 			}
 		}
 	return state;
 		});
 
-	BehaviourAction* goToRoom = new BehaviourAction("Go To Room", [&](float dt, BehaviourState state)->BehaviourState {
+	BehaviourAction* goBeserk = new BehaviourAction("Go Beserk", [&](float dt, BehaviourState state)->BehaviourState {
 		if (state == Initialise) {
-			std::cout << "Going to loot room\n";
+			StateGameObject::goBeserk(GetGameObject());
 			state = Ongoing;
 		}
 		else if (state == Ongoing) {
@@ -149,10 +131,17 @@ void StateGameObject::TestBehaviourTree() {
 	return state;
 		});
 
-	BehaviourAction* openDoor = new BehaviourAction("Open Door", [&](float dt, BehaviourState state)->BehaviourState {
+	BehaviourAction* chasePlayer = new BehaviourAction("Chase Player", [&](float dt, BehaviourState state)->BehaviourState {
 		if (state == Initialise) {
-			std::cout << "Opening Door\n";
-			return Success;
+			std::cout << "Chasing the Player\n";
+			StateGameObject::ChasePlayer(GetGameObject());
+			return Ongoing;
+		}
+		else if (state == Ongoing) {
+			if (chase) {
+				return Success;
+			}
+			return Failure;
 		}
 	return state;
 		});
@@ -192,9 +181,8 @@ void StateGameObject::TestBehaviourTree() {
 		});
 
 	BehaviourSequence* sequence = new BehaviourSequence("Room Sequence");
-	sequence->AddChild(findKey);
-	sequence->AddChild(goToRoom);
-	sequence->AddChild(openDoor);
+	sequence->AddChild(patrolArea);
+	sequence->AddChild(goBeserk);
 
 	BehaviourSelector* selection = new BehaviourSelector("Loot Selector");
 	selection->AddChild(lookForTreasure);
