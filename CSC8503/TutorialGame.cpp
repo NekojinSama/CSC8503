@@ -7,6 +7,7 @@
 #include "PositionConstraint.h"
 #include "OrientationConstraint.h"
 #include "StateGameObject.h"
+#include "StateGameObjectB.h"
 #include "AiPathFollow.h"
 
 #include <fstream>
@@ -46,6 +47,7 @@ void TutorialGame::InitialiseAssets() {
 	sphereMesh	= renderer->LoadMesh("sphere.msh");
 	charMesh	= renderer->LoadMesh("goat.msh");
 	enemyMesh	= renderer->LoadMesh("Keeper.msh");
+	gooseMesh	= renderer->LoadMesh("goose.msh");
 	bonusMesh	= renderer->LoadMesh("apple.msh");
 	capsuleMesh = renderer->LoadMesh("capsule.msh");
 
@@ -102,6 +104,10 @@ void TutorialGame::UpdateGame(float dt) {
 
 	if (testStateObject) {
 		testStateObject -> Update(dt);
+	}
+
+	if (testStateObjectB) {
+		testStateObjectB->Update(dt);
 	}
 
 	if (pathObject) {
@@ -391,6 +397,7 @@ void TutorialGame::InitWorld() {
 	InitDefaultFloor();
 	BridgeConstraintTest();
 	testStateObject = AddStateObjectToWorld(Vector3(50, 0, -140) + offset, 1.0f, 1);
+	testStateObjectB = AddStateWorld(Vector3(-100, 0, -140) + offset, 1.0f, 1);
 	pathObject = AddPathToWorld(Vector3(185, 0, 35) + offset, 3.0f, 1);
 }
 
@@ -716,9 +723,35 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position, fl
 	sphere->GetPhysicsObject()->SetInverseMass(inverseMass);
 	sphere->GetPhysicsObject()->SetElasticity(1.0f);
 	sphere->GetPhysicsObject()->InitSphereInertia();
-
+	sphere->SetWorld(world);
 	world->AddGameObject(sphere);
 	sphere->SetGameObject(player); 
+
+	return sphere;
+}
+
+StateGameObjectB* TutorialGame::AddStateWorld(const Vector3& position, float radius, float inverseMass) {
+	StateGameObjectB* sphere = new StateGameObjectB();
+
+	Vector3 sphereSize = Vector3(radius, radius, radius);
+	SphereVolume* volume = new SphereVolume(radius);
+	sphere->SetBoundingVolume((CollisionVolume*)volume);
+
+	sphere->GetTransform()
+		.SetScale(sphereSize)
+		.SetPosition(position);
+
+	sphere->SetLayer(5);
+
+	sphere->SetRenderObject(new RenderObject(&sphere->GetTransform(), sphereMesh, basicTex, basicShader));
+	sphere->SetPhysicsObject(new PhysicsObject(&sphere->GetTransform(), sphere->GetBoundingVolume()));
+
+	sphere->GetPhysicsObject()->SetInverseMass(inverseMass);
+	sphere->GetPhysicsObject()->SetElasticity(1.0f);
+	sphere->GetPhysicsObject()->InitSphereInertia();
+	sphere->SetWorld(world);
+	world->AddGameObject(sphere);
+	sphere->SetGameObject(player);
 
 	return sphere;
 }
@@ -736,7 +769,7 @@ AiPathFollow* TutorialGame::AddPathToWorld(const Vector3& position, float radius
 
 	sphere->SetLayer(5);
 
-	sphere->SetRenderObject(new RenderObject(&sphere->GetTransform(), sphereMesh, basicTex, basicShader));
+	sphere->SetRenderObject(new RenderObject(&sphere->GetTransform(), gooseMesh, nullptr, basicShader));
 	sphere->SetPhysicsObject(new PhysicsObject(&sphere->GetTransform(), sphere->GetBoundingVolume()));
 
 	sphere->GetPhysicsObject()->SetInverseMass(inverseMass);

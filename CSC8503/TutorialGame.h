@@ -7,6 +7,7 @@
 #include "BonusInteract.h"
 
 #include "StateGameObject.h"
+#include "StateGameObjectB.h"
 #include "AiPathFollow.h"
 
 namespace NCL {
@@ -71,8 +72,10 @@ namespace NCL {
 			BonusInteract* AddBonusCone(const Vector3& position);
 
 			StateGameObject* AddStateObjectToWorld(const Vector3& position, float radius, float inverseMass);
+			StateGameObjectB* AddStateWorld(const Vector3& position, float radius, float inverseMass);
 			AiPathFollow* AddPathToWorld(const Vector3& position, float radius, float inverseMass);
 			StateGameObject* testStateObject;
+			StateGameObjectB* testStateObjectB;
 			AiPathFollow* pathObject;
 
 
@@ -107,6 +110,7 @@ namespace NCL {
 			MeshGeometry*	charMesh	= nullptr;
 			MeshGeometry*	enemyMesh	= nullptr;
 			MeshGeometry*	bonusMesh	= nullptr;
+			MeshGeometry*	gooseMesh	= nullptr;
 
 			//Coursework Additional functionality	
 			GameObject* lockedObject	= nullptr;

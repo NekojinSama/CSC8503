@@ -1,5 +1,7 @@
 #pragma once
 #include "GameObject.h"
+#include "BehaviourSelector.h"
+#include "BehaviourSequence.h"
 //#include "TutorialGame.h"
 #include <vector>
 
@@ -8,10 +10,10 @@ namespace NCL {
         class StateMachine;
         class TutorialGame;
         class GameWorld;
-        class StateGameObject : public GameObject /*, public TutorialGame */{
+        class StateGameObjectB : public GameObject /*, public TutorialGame */{
         public:
-            StateGameObject();
-            ~StateGameObject();
+            StateGameObjectB();
+            ~StateGameObjectB();
 
             virtual void Update(float dt);
             void SetGameObject(GameObject* player) {
@@ -27,8 +29,12 @@ namespace NCL {
             GameWorld* GetWorld() {
                 return world;
             }
+
+            BehaviourState getState() {
+                return state;
+            }
             
-            /*void TestBehaviourTree();*/
+            void TestBehaviourTree();
 
         protected:
             void MoveLeft(float dt);
@@ -37,7 +43,7 @@ namespace NCL {
             void goBeserk(GameObject* player);
             void ChasePlayer(GameObject* player);
 
-            vector <Vector3> posList = { Vector3(180, 0, -130), Vector3(120, 0, -170), Vector3(80, 0, -170), Vector3(80, 0, -130) };
+            vector <Vector3> posList2 = { Vector3(180, 0, -130), Vector3(120, 0, -170), Vector3(80, 0, -170), Vector3(80, 0, -130) };
 
             StateMachine*   stateMachine;
             bool            chase = false;
@@ -45,6 +51,8 @@ namespace NCL {
             int             instance;
             GameObject*     playerObj;
             GameWorld*          world;
+            BehaviourSequence* rootSequence;
+            BehaviourState  state;
 
         private:
             

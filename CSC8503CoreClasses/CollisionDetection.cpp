@@ -322,6 +322,29 @@ bool CollisionDetection::AABBSphereIntersection(const AABBVolume& volumeA, const
 
 bool  CollisionDetection::OBBSphereIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
 	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
+	Quaternion orientation = worldTransformA.GetOrientation();
+	Vector3 position = worldTransformA.GetPosition();
+
+	Matrix3 transform = Matrix3(orientation);
+	Matrix3 invTransform = Matrix3(orientation.Conjugate());
+
+	Vector3 localSpherePos = invTransform * (worldTransformB.GetPosition() - position);
+	Transform newTransformA(worldTransformA);
+	newTransformA.SetPosition(Vector3());
+
+	Transform newTransformB;
+	newTransformB.SetPosition(localSpherePos);
+
+	AABBVolume newVolumeA = AABBVolume(volumeA.GetHalfDimensions());
+
+	bool collided = AABBSphereIntersection(newVolumeA, newTransformA, volumeB, newTransformB, collisionInfo);
+	if (collided) {
+		CollisionInfo().point.normal = orientation * collisionInfo.point.normal;
+		CollisionInfo().point.normal = orientation * collisionInfo.point.normal + position;
+
+		return collided;
+	}
+
 	return false;
 }
 

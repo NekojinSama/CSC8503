@@ -70,6 +70,9 @@ void AiPathFollow::MovePatrol() {
 	GetPhysicsObject()->ClearForces();
 	int i = 0;
 	Vector3 moveDir = (testNodes.at(curInstance)) - this->GetTransform().GetPosition();
+	Vector3 direction = moveDir.Normalised();
+	//this->GetTransform().SetPosition(this->GetTransform().GetOrientation() * direction);
+	//this->GetTransform().SetOrientation(Vector3(moveDir.Normalised().x, 0, moveDir.Normalised().z));
 	this->GetPhysicsObject()->AddForce(Vector3(moveDir.Normalised().x, 0, moveDir.Normalised().z));
 	if ((moveDir*Vector3(1,0,1)).Length() < 1.0f && forward ) {
 		curInstance++;
