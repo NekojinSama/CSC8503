@@ -12,7 +12,9 @@ namespace NCL {
 			bool Initialise();
 			void Shutdown();
 
-			void SetGameWorld(GameWorld &g);
+			void SetGameWorld(GameWorld& g) {
+				gameWorld = &g;
+			}
 
 			bool SendGlobalPacket(int msgID);
 			bool SendGlobalPacket(GamePacket& packet);
