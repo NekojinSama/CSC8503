@@ -1,4 +1,4 @@
-# CSC8503
+# Goat Game | Game Engine
 
 ### Basic Controls:
 --------------------------
