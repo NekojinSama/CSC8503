@@ -48,3 +48,7 @@ AI was demonstrated in various forms, ranging from basic state machines responsi
 ## Problems faced during the project:
 Problems I faced while making A* pathfinding was that the Goose wouldn't move to a certain point in the path and cause vector subscript out-of-range error. It was solved by increasing the radius which it considers a point and decreasing the speed at which it moves.
 
+## Project Showcase:
+> Click/tap on the image for a YouTube video showing the gameplay:
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/JRBptyqvpQU/0.jpg)](https://www.youtube.com/watch?v=JRBptyqvpQU)
